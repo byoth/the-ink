@@ -13,8 +13,10 @@ final class CanvasViewHandler: NSObject, PKCanvasViewDelegate {
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         lastDrawing = canvasView.drawing
         let drawing = canvasView.drawing.getDrawing()
-        print("@LOG drawing \(drawing.getCode())")
+        let pointsCount = drawing.strokes.map { $0.points }.reduce(0) { $0 + $1.count }
+        print("@LOG drawing \(pointsCount) \(drawing.getRawValue())")
         print("@LOG strokes count \(drawing.strokes.count)")
+        print("@LOG points count \(pointsCount)")
     }
     
     func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {

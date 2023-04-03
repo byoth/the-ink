@@ -17,3 +17,22 @@ struct Ink {
         self.color = color
     }
 }
+
+extension Ink: CompactCodable {
+    func getRawValue() -> String {
+        let components = [inkType.rawValue, color.getRawValue()]
+        return components
+            .map { String($0) }
+            .joined(separator: "I")
+    }
+    
+    static func build(rawValue: String) -> Ink {
+        let components = rawValue
+            .split(separator: "I")
+            .map { String($0) }
+        return Ink(
+            inkType: .init(rawValue: components[0]) ?? .pen,
+            color: .build(rawValue: components[1])
+        )
+    }
+}

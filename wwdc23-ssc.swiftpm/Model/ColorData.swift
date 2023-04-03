@@ -12,19 +12,6 @@ struct ColorData {
     let green: CGFloat
     let blue: CGFloat
     let alpha: CGFloat
-}
-
-extension ColorData {
-    func getCode() -> String {
-        """
-        ColorData(
-            red: \(red),
-            green: \(green),
-            blue: \(blue),
-            alpha: \(alpha)
-        )
-        """
-    }
     
     func getUiColor() -> UIColor {
         UIColor(red: red, green: green, blue: blue, alpha: alpha)
@@ -41,6 +28,27 @@ extension ColorData {
             green: green.decimalRounded(),
             blue: blue.decimalRounded(),
             alpha: alpha.decimalRounded()
+        )
+    }
+}
+
+extension ColorData: CompactCodable {
+    func getRawValue() -> String {
+        let components = [red, green, blue, alpha]
+        return components
+            .map { "\($0)" }
+            .joined(separator: "C")
+    }
+    
+    static func build(rawValue: String) -> Self {
+        let components = rawValue
+            .split(separator: "C")
+            .map { CGFloat(Double(String($0)) ?? 0) }
+        return ColorData(
+            red: components[0],
+            green: components[1],
+            blue: components[2],
+            alpha: components[3]
         )
     }
 }

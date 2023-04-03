@@ -12,21 +12,27 @@ struct Stroke {
     let points: [StrokePoint]
 }
 
-extension Stroke {
-    func getCode() -> String {
-        let pointsCode = points
-            .map { $0.getCode() }
-            .joined(separator: ",\n")
-        return """
-        Stroke(
-            ink: Ink(
-                inkType: .\(ink.inkType.rawValue.split(separator: ".").last ?? "pen"),
-                color: \(ink.color.getCode())
-            ),
-            points: [
-                \(pointsCode)
-            ]
+extension Stroke: CompactCodable {
+    func getRawValue() -> String {
+        let ink = ink.getRawValue()
+        let points = points
+            .map { $0.getRawValue() }
+            .joined(separator: "p")
+        let components = [ink, points]
+            .joined(separator: "S")
+        return components
+    }
+    
+    static func build(rawValue: String) -> Self {
+        let components = rawValue
+            .split(separator: "S")
+            .map { String($0) }
+        return Stroke(
+            ink: .build(rawValue: components[0]),
+            points: components[1]
+                .split(separator: "p")
+                .map { String($0) }
+                .map { .build(rawValue: $0) }
         )
-        """
     }
 }
