@@ -19,9 +19,11 @@ struct CanvasUIView: UIViewRepresentable {
         canvasView.delegate = canvasViewDelegate
         canvasView.sketcher = sketcher
         canvasView.setToolPicker()
+        canvasView.applyStyle()
         return canvasView
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
+        canvasView.drawing = Drawing.sample.getPkDrawing()
     }
 }

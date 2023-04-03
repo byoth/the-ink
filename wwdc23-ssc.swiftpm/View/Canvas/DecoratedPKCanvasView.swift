@@ -36,6 +36,11 @@ final class DecoratedPKCanvasView: PKCanvasView {
         becomeFirstResponder()
     }
     
+    func applyStyle() {
+        backgroundColor = .white
+        applyRoundedCorners(radius: 24)
+    }
+    
     private func getPoint(by touches: Set<UITouch>) -> CGPoint {
         let touch = touches.first!
         let point = touch.location(in: self)

@@ -8,8 +8,13 @@
 import PencilKit
 
 final class CanvasViewHandler: NSObject, PKCanvasViewDelegate {
+    private var lastDrawing: PKDrawing?
+    
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-        print("@LOG drawing \(canvasView)")
+        lastDrawing = canvasView.drawing
+        let drawing = canvasView.drawing.getDrawing()
+        print("@LOG drawing \(drawing.getCode())")
+        print("@LOG strokes count \(drawing.strokes.count)")
     }
     
     func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {

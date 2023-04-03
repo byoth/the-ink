@@ -13,6 +13,7 @@ struct CanvasView: View {
     
     var body: some View {
         CanvasUIView(canvasView: $canvasView)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .aspectRatio(16 / 9, contentMode: .fit)
+            .shadow(radius: 16, y: 8)
     }
 }

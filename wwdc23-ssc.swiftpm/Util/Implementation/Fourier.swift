@@ -67,7 +67,7 @@ final class Fourier: ObservableObject, Fourierable, Sketchable {
             if amplitude > amplitudeThreshold {
                 let phase = atan2(im, re)
                 let frequency = Double(i)
-                let point = CGPoint(x: frequency.cgFloat(decimalPoint: 1), y: phase.cgFloat(decimalPoint: 1))
+                let point = CGPoint(x: frequency.decimalRounded(), y: phase.decimalRounded())
                 series.append(point)
             }
         }
