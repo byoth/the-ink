@@ -47,7 +47,7 @@ class SketchUIView: UIView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        sketcher?.end()
+        sketcher?.end(point: .zero)
         if let fourier = sketcher as? Fourier {
             print(fourier.getDigitizedPoints())
             print(fourier.getSeries())

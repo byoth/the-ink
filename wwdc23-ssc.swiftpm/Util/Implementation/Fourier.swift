@@ -24,7 +24,7 @@ final class Fourier: ObservableObject, Fourierable, Sketchable {
         pencilPoints.append(point)
     }
     
-    func end() {
+    func end(point: CGPoint) {
         // 푸리에 급수 계산을 수행합니다.
         digitizedPoints = digitize(pencilPoints: pencilPoints)
         series = calculate(digitizedPoints: digitizedPoints, numberOfTerms: numberOfTerms, amplitudeThreshold: amplitudeThreshold)

@@ -10,5 +10,5 @@ import Foundation
 protocol Sketchable {
     func begin(point: CGPoint)
     func move(point: CGPoint)
-    func end()
+    func end(point: CGPoint)
 }
