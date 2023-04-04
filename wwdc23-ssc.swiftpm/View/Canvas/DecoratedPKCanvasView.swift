@@ -29,15 +29,11 @@ final class DecoratedPKCanvasView: PKCanvasView {
         sketcher?.end(point: point)
     }
     
-    func setToolPicker() {
+    func applyToolPicker() {
         toolPicker = PKToolPicker()
         toolPicker?.addObserver(self)
         toolPicker?.setVisible(true, forFirstResponder: self)
-    }
-    
-    func applyStyle() {
-        backgroundColor = .white
-        applyRoundedCorners(radius: 24)
+        becomeFirstResponder()
     }
     
     private func getPoint(by touches: Set<UITouch>) -> CGPoint {

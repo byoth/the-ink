@@ -12,21 +12,16 @@ struct CanvasUIView: UIViewRepresentable {
     typealias UIViewType = PKCanvasView
     
     @Binding var canvasView: DecoratedPKCanvasView
-    private let canvasViewDelegate: PKCanvasViewDelegate = CanvasViewHandler()
-    private let sketcher: Sketchable = Sketcher()
+    let canvasViewDelegate: PKCanvasViewDelegate?
+    let sketcher: Sketchable?
     
     func makeUIView(context: Context) -> UIViewType {
         canvasView.delegate = canvasViewDelegate
         canvasView.sketcher = sketcher
-        canvasView.setToolPicker()
-        canvasView.applyStyle()
-        canvasView.becomeFirstResponder()
+        canvasView.backgroundColor = .clear
         return canvasView
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        DispatchQueue.main.async {
-            uiView.drawing = Drawing.sample.getPkDrawing(canvasSize: canvasView.bounds.size)
-        }
     }
 }

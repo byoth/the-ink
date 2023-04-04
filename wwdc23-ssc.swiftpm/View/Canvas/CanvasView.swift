@@ -9,11 +9,43 @@ import SwiftUI
 import PencilKit
 
 struct CanvasView: View {
-    @State private var canvasView = DecoratedPKCanvasView()
+    let drawing: Drawing?
+    let isBackground: Bool
+    @State private var canvasView: DecoratedPKCanvasView
+    
+    init(drawing: Drawing? = nil,
+         isBackground: Bool = false,
+         canvasView: DecoratedPKCanvasView = .init()) {
+        self.drawing = drawing
+        self.isBackground = isBackground
+        self.canvasView = canvasView
+    }
     
     var body: some View {
-        CanvasUIView(canvasView: $canvasView)
-            .aspectRatio(1 / 1, contentMode: .fit)
-            .shadow(radius: 16, y: 8)
+        CanvasUIView(
+            canvasView: $canvasView,
+            canvasViewDelegate: isBackground ? nil : CanvasViewHandler(),
+            sketcher: isBackground ? nil : Sketcher()
+        )
+        .onAppear {
+            applyToolPickerIfNeeded()
+            applyDrawing(drawing)
+        }
+    }
+    
+    private func applyToolPickerIfNeeded() {
+        guard !isBackground else {
+            return
+        }
+        canvasView.applyToolPicker()
+    }
+    
+    private func applyDrawing(_ drawing: Drawing?) {
+        guard let drawing = drawing else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.canvasView.drawing = drawing.getPkDrawing(canvasSize: self.canvasView.bounds.size)
+        }
     }
 }
