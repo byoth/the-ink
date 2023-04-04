@@ -2,50 +2,34 @@
 //  CanvasView.swift
 //  wwdc23-ssc
 //
-//  Created by byo on 2023/04/03.
+//  Created by byo on 2023/04/05.
 //
 
 import SwiftUI
-import PencilKit
 
 struct CanvasView: View {
-    let drawing: Drawing?
-    let isBackground: Bool
-    @State private var canvasView: DecoratedPKCanvasView
-    
-    init(drawing: Drawing? = nil,
-         isBackground: Bool = false,
-         canvasView: DecoratedPKCanvasView = .init()) {
-        self.drawing = drawing
-        self.isBackground = isBackground
-        self.canvasView = canvasView
-    }
+    @ObservedObject var resource: DrawingResource
+    private let sketcher = CanvasViewSketcher()
     
     var body: some View {
-        CanvasUIView(
-            canvasView: $canvasView,
-            canvasViewDelegate: isBackground ? nil : CanvasViewDelegate(),
-            sketcher: isBackground ? nil : CanvasSketcher(canvasView: canvasView)
-        )
+        ZStack(alignment: .bottomTrailing) {
+            Color.white
+                .cornerRadius(24)
+                .shadow(radius: 16, y: 8)
+            CanvasLayerView(drawing: .background)
+            CanvasLayerView(drawing: .foreground, sketcher: sketcher)
+            ResourceGaugeView(resource: resource)
+        }
+        .aspectRatio(1 / 1, contentMode: .fit)
         .onAppear {
-            applyToolPickerIfNeeded()
-            applyDrawing(drawing)
+            sketcher.resource = resource
         }
     }
-    
-    private func applyToolPickerIfNeeded() {
-        guard !isBackground else {
-            return
-        }
-        canvasView.applyToolPicker()
-    }
-    
-    private func applyDrawing(_ drawing: Drawing?) {
-        guard let drawing = drawing else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.canvasView.drawing = drawing.getPkDrawing(canvasSize: self.canvasView.bounds.size)
-        }
+}
+
+struct CanvasView_Previews: PreviewProvider {
+    static var previews: some View {
+        let resource = DrawingResource()
+        return CanvasView(resource: resource)
     }
 }

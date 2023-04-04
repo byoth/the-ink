@@ -8,7 +8,7 @@
 import Foundation
 
 final class DrawingResource: ObservableObject {
-    private static let maxValue = 10
+    private static let maxValue = 100
     
     @Published private var amount: Int
     
@@ -17,10 +17,16 @@ final class DrawingResource: ObservableObject {
     }
     
     func increaseAmount() {
+        guard amount < Self.maxValue else {
+            return
+        }
         amount += 1
     }
     
     func decreaseAmount() {
+        guard amount > 0 else {
+            return
+        }
         amount -= 1
     }
     

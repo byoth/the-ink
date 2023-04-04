@@ -13,18 +13,6 @@ struct ResourceGaugeView: View {
     
     @ObservedObject var resource: DrawingResource
     
-    private var value: CGFloat {
-        resource.getPercentage()
-    }
-    
-    private var imageName: String {
-        resource.isEmpty() ? "paintbrush.pointed" : "paintbrush.pointed.fill"
-    }
-    
-    private var scale: CGFloat {
-        resource.isFull() ? 1.1 : 1
-    }
-    
     var body: some View {
         ZStack {
             Circle()
@@ -36,7 +24,7 @@ struct ResourceGaugeView: View {
                         endRadius: 100
                     )
                 )
-            Image(systemName: imageName)
+            Image(systemName: getImageName())
                 .font(.title3)
                 .onTapGesture {
                     resource.increaseAmount()
@@ -52,12 +40,24 @@ struct ResourceGaugeView: View {
                     lineWidth: Self.lineWidth
                 )
             Circle()
-                .trim(from: 0.0, to: value)
+                .trim(from: 0.0, to: getValue())
                 .stroke(.black, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90.0))
         }
         .frame(width: Self.sizeLength, height: Self.sizeLength)
-        .scaleEffect(x: scale, y: scale)
-        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: value)
+        .scaleEffect(x: getScale(), y: getScale())
+        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: getValue())
+    }
+    
+    private func getValue() -> CGFloat {
+        resource.getPercentage()
+    }
+    
+    private func getImageName() -> String {
+        resource.isEmpty() ? "paintbrush.pointed" : "paintbrush.pointed.fill"
+    }
+    
+    private func getScale() -> CGFloat {
+        resource.isFull() ? 1.1 : 1
     }
 }

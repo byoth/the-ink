@@ -9,7 +9,6 @@ import PencilKit
 
 final class DecoratedPKCanvasView: PKCanvasView {
     var sketcher: Sketchable?
-    private var toolPicker: PKToolPicker?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -27,13 +26,6 @@ final class DecoratedPKCanvasView: PKCanvasView {
         super.touchesEnded(touches, with: event)
         let point = getPoint(by: touches)
         sketcher?.end(point: point)
-    }
-    
-    func applyToolPicker() {
-        toolPicker = PKToolPicker()
-        toolPicker?.addObserver(self)
-        toolPicker?.setVisible(true, forFirstResponder: self)
-        becomeFirstResponder()
     }
     
     func getStrokesCount() -> Int {
