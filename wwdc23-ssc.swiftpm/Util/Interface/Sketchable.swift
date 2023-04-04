@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Sketchable {
+protocol Sketchable: AnyObject {
     func begin(point: CGPoint)
     func move(point: CGPoint)
     func end(point: CGPoint)

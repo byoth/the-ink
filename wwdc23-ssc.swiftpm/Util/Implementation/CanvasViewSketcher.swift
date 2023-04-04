@@ -8,51 +8,50 @@
 import PencilKit
 
 final class CanvasViewSketcher: NSObject, Sketchable, PKCanvasViewDelegate {
-    var canvasView: DecoratedPKCanvasView!
-    var resource: DrawingResource!
+    weak var canvasView: DecoratedPKCanvasView!
+    weak var resource: DrawingResource!
     private let toolPicker = PKToolPicker()
     
     func applyToolPicker() {
+        toolPicker.selectedTool = PKEraserTool(.vector)
         toolPicker.addObserver(canvasView)
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         canvasView.becomeFirstResponder()
     }
     
     func begin(point: CGPoint) {
-        print("@LOG begin \(canvasView.getStrokesCount()) \(canvasView.getStrokePointsCount())")
     }
     
     func move(point: CGPoint) {
-        if isErasing() {
-            resource.increaseAmount()
-        } else {
-            resource.decreaseAmount()
-        }
-        print("@LOG move \(canvasView.getStrokesCount()) \(canvasView.getStrokePointsCount())")
     }
     
     func end(point: CGPoint) {
-        print("@LOG end \(canvasView.getStrokesCount()) \(canvasView.getStrokePointsCount())")
     }
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-        let drawing = Drawing.build(pkDrawing: canvasView.drawing, canvasSize: canvasView.bounds.size)
-        let points = canvasView.drawing.getAllPoints()
-        print("@LOG drawing \(points.count) \(drawing.getRawValue())")
-        print("@LOG strokes count \(drawing.strokes.count)")
-        print("@LOG points count \(points.count)")
+        updateResource()
+        printDrawing()
     }
     
     func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {
-        print("@LOG rendering \(canvasView)")
     }
     
     func canvasViewDidBeginUsingTool(_ canvasView: PKCanvasView) {
-        print("@LOG beginUsingTool \(canvasView)")
     }
     
     func canvasViewDidEndUsingTool(_ canvasView: PKCanvasView) {
-        print("@LOG endUsingTool \(canvasView)")
+    }
+    
+    private func updateResource() {
+        let initialPointsCount = canvasView.getInitialPointCount()
+        let currentPointsCount = canvasView.drawing.getPointsCount()
+        resource.setAmount(initialPointsCount - currentPointsCount, maxAmount: initialPointsCount)
+    }
+    
+    private func printDrawing() {
+        let drawing = Drawing.build(pkDrawing: canvasView.drawing, canvasSize: canvasView.bounds.size)
+        let pointsCount = canvasView.drawing.getPointsCount()
+        print("@LOG drawing \(pointsCount) \(drawing.getRawValue()) \(drawing.strokes.count) \(pointsCount)")
     }
     
     private func isErasing() -> Bool {

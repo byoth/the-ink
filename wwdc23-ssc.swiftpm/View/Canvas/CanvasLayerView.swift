@@ -10,7 +10,7 @@ import PencilKit
 
 struct CanvasLayerView: View {
     private let drawing: Drawing?
-    private let sketcher: CanvasViewSketcher?
+    private weak var sketcher: CanvasViewSketcher?
     @State private var canvasView = DecoratedPKCanvasView()
     
     init(drawing: Drawing? = nil,
@@ -31,11 +31,11 @@ struct CanvasLayerView: View {
     }
     
     private func applyDrawing(_ drawing: Drawing?) {
-        guard let drawing = drawing else {
-            return
-        }
         DispatchQueue.main.async {
-            self.canvasView.drawing = drawing.getPkDrawing(canvasSize: self.canvasView.bounds.size)
+            guard let drawing = drawing?.getPkDrawing(canvasSize: canvasView.bounds.size) else {
+                return
+            }
+            self.canvasView.setDrawing(drawing)
         }
     }
     

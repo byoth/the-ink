@@ -8,30 +8,22 @@
 import Foundation
 
 final class DrawingResource: ObservableObject {
-    private static let maxValue = 100
-    
     @Published private var amount: Int
+    private var maxAmount: Int
     
-    init(amount: Int = 0) {
+    init(amount: Int = 0,
+         maxAmount: Int = 1) {
         self.amount = amount
+        self.maxAmount = maxAmount
     }
     
-    func increaseAmount() {
-        guard amount < Self.maxValue else {
-            return
-        }
-        amount += 1
-    }
-    
-    func decreaseAmount() {
-        guard amount > 0 else {
-            return
-        }
-        amount -= 1
+    func setAmount(_ amount: Int, maxAmount: Int) {
+        self.amount = amount
+        self.maxAmount = maxAmount
     }
     
     func getPercentage() -> CGFloat {
-        CGFloat(amount) / CGFloat(Self.maxValue)
+        CGFloat(amount) / CGFloat(maxAmount)
     }
     
     func isFull() -> Bool {

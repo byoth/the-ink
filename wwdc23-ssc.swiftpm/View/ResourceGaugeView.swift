@@ -26,9 +26,6 @@ struct ResourceGaugeView: View {
                 )
             Image(systemName: getImageName())
                 .font(.title3)
-                .onTapGesture {
-                    resource.increaseAmount()
-                }
             Circle()
                 .stroke(
                     RadialGradient(
@@ -39,6 +36,7 @@ struct ResourceGaugeView: View {
                     ),
                     lineWidth: Self.lineWidth
                 )
+                .shadow(radius: getShadowRadius())
             Circle()
                 .trim(from: 0.0, to: getValue())
                 .stroke(.black, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
@@ -55,6 +53,10 @@ struct ResourceGaugeView: View {
     
     private func getImageName() -> String {
         resource.isEmpty() ? "paintbrush.pointed" : "paintbrush.pointed.fill"
+    }
+    
+    private func getShadowRadius() -> CGFloat {
+        resource.isFull() ? 4 : 0
     }
     
     private func getScale() -> CGFloat {

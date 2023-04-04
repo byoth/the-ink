@@ -12,7 +12,9 @@ struct CanvasUIView: UIViewRepresentable {
     typealias UIViewType = DecoratedPKCanvasView
     
     @Binding var canvasView: UIViewType
-    let sketcher: CanvasViewSketcher?
+    weak var sketcher: CanvasViewSketcher?
+    
+    // TODO: init with @Binding
     
     func makeUIView(context: Context) -> UIViewType {
         canvasView.delegate = sketcher

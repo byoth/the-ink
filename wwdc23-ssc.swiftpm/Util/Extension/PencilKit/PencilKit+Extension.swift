@@ -8,10 +8,10 @@
 import PencilKit
 
 extension PKDrawing {
-    func getAllPoints() -> [PKStrokePoint] {
+    func getPointsCount() -> Int {
         strokes
-            .map { $0.getAllPoints() }
-            .flatMap { $0 }
+            .map { $0.getAllPoints().count }
+            .reduce(0, +)
     }
 }
 

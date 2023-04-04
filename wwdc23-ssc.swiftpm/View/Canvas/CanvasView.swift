@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CanvasView: View {
     @ObservedObject var resource: DrawingResource
-    private let sketcher = CanvasViewSketcher()
+    @State private var sketcher = CanvasViewSketcher()
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {

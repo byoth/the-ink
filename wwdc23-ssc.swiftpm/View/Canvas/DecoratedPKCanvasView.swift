@@ -8,7 +8,8 @@
 import PencilKit
 
 final class DecoratedPKCanvasView: PKCanvasView {
-    var sketcher: Sketchable?
+    weak var sketcher: Sketchable?
+    private var initialPointsCount: Int?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -28,12 +29,13 @@ final class DecoratedPKCanvasView: PKCanvasView {
         sketcher?.end(point: point)
     }
     
-    func getStrokesCount() -> Int {
-        drawing.strokes.count
+    func setDrawing(_ drawing: PKDrawing) {
+        initialPointsCount = drawing.getPointsCount()
+        self.drawing = drawing
     }
     
-    func getStrokePointsCount() -> Int {
-        drawing.getAllPoints().count
+    func getInitialPointCount() -> Int {
+        initialPointsCount ?? 1
     }
     
     private func getPoint(by touches: Set<UITouch>) -> CGPoint {
