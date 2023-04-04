@@ -8,30 +8,19 @@
 import PencilKit
 
 extension Stroke {
-    func getPkStroke() -> PKStroke {
+    func getPkStroke(canvasSize: CGSize) -> PKStroke {
         let ink = ink.getPkInk()
-        let controlPoints = points.map { $0.getPkStrokePoint() }
+        let controlPoints = points.map { $0.getPkStrokePoint(canvasSize: canvasSize) }
         let path = PKStrokePath(controlPoints: controlPoints, creationDate: .now)
         return PKStroke(ink: ink, path: path)
     }
     
-    static func build(pkStroke: PKStroke) -> Self {
+    static func build(pkStroke: PKStroke, canvasSize: CGSize) -> Self {
         Stroke(
             ink: .build(pkInk: pkStroke.ink),
             points: pkStroke.path
                 .getAllPoints()
-                .map { .build(pkStrokePoint: $0) }
-        )
-    }
-}
-
-extension PKStroke {
-    func getStroke() -> Stroke {
-        Stroke(
-            ink: .build(pkInk: ink),
-            points: path
-                .getAllPoints()
-                .map { .build(pkStrokePoint: $0) }
+                .map { .build(pkStrokePoint: $0, canvasSize: canvasSize) }
         )
     }
 }

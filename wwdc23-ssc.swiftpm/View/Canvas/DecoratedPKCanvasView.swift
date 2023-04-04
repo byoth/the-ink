@@ -33,7 +33,6 @@ final class DecoratedPKCanvasView: PKCanvasView {
         toolPicker = PKToolPicker()
         toolPicker?.addObserver(self)
         toolPicker?.setVisible(true, forFirstResponder: self)
-        becomeFirstResponder()
     }
     
     func applyStyle() {

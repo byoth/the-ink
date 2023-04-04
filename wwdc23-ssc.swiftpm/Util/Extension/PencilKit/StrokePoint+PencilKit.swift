@@ -8,11 +8,17 @@
 import PencilKit
 
 extension StrokePoint {
-    func getPkStrokePoint() -> PKStrokePoint {
+    func getPkStrokePoint(canvasSize: CGSize) -> PKStrokePoint {
         PKStrokePoint(
-            location: location,
+            location: CGPoint(
+                x: relativeLocation.x * canvasSize.width,
+                y: relativeLocation.y * canvasSize.height
+            ),
             timeOffset: timeOffset,
-            size: size,
+            size: CGSize(
+                width: relativeSize.width * canvasSize.width,
+                height: relativeSize.height * canvasSize.height
+            ),
             opacity: opacity,
             force: force,
             azimuth: azimuth,
@@ -20,16 +26,16 @@ extension StrokePoint {
         )
     }
     
-    static func build(pkStrokePoint: PKStrokePoint) -> Self {
+    static func build(pkStrokePoint: PKStrokePoint, canvasSize: CGSize) -> Self {
         StrokePoint(
-            location: CGPoint(
-                x: pkStrokePoint.location.x.decimalRounded(),
-                y: pkStrokePoint.location.y.decimalRounded()
+            relativeLocation: CGPoint(
+                x: (pkStrokePoint.location.x / canvasSize.width).decimalRounded(),
+                y: (pkStrokePoint.location.y / canvasSize.height).decimalRounded()
             ),
             timeOffset: pkStrokePoint.timeOffset.decimalRounded(),
-            size: CGSize(
-                width: pkStrokePoint.size.width.decimalRounded(),
-                height: pkStrokePoint.size.height.decimalRounded()
+            relativeSize: CGSize(
+                width: (pkStrokePoint.size.width / canvasSize.width).decimalRounded(),
+                height: (pkStrokePoint.size.height / canvasSize.height).decimalRounded()
             ),
             opacity: pkStrokePoint.opacity.decimalRounded(),
             force: pkStrokePoint.force.decimalRounded(),

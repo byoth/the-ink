@@ -20,10 +20,13 @@ struct CanvasUIView: UIViewRepresentable {
         canvasView.sketcher = sketcher
         canvasView.setToolPicker()
         canvasView.applyStyle()
+        canvasView.becomeFirstResponder()
         return canvasView
     }
     
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        canvasView.drawing = Drawing.sample.getPkDrawing()
+        DispatchQueue.main.async {
+            uiView.drawing = Drawing.sample.getPkDrawing(canvasSize: canvasView.bounds.size)
+        }
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 struct StrokePoint {
-    let location: CGPoint
+    let relativeLocation: CGPoint
     let timeOffset: TimeInterval
-    let size: CGSize
+    let relativeSize: CGSize
     let opacity: CGFloat
     let force: CGFloat
     let azimuth: CGFloat
@@ -19,7 +19,7 @@ struct StrokePoint {
 
 extension StrokePoint: CompactCodable {
     func getRawValue() -> String {
-        let components = [location.x, location.y, timeOffset, size.width, size.height, opacity, force, azimuth, altitude]
+        let components = [relativeLocation.x, relativeLocation.y, timeOffset, relativeSize.width, relativeSize.height, opacity, force, azimuth, altitude]
             .map { String($0) }
             .joined(separator: "P")
         return components
@@ -30,9 +30,9 @@ extension StrokePoint: CompactCodable {
             .split(separator: "P")
             .map { Double($0) ?? 0 }
         return StrokePoint(
-            location: .init(x: components[0], y: components[1]),
+            relativeLocation: .init(x: components[0], y: components[1]),
             timeOffset: components[2],
-            size: .init(width: components[3], height: components[4]),
+            relativeSize: .init(width: components[3], height: components[4]),
             opacity: components[5],
             force: components[6],
             azimuth: components[7],

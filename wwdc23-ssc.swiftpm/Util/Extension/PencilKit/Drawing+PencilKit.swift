@@ -8,21 +8,11 @@
 import PencilKit
 
 extension Drawing {
-    func getPkDrawing() -> PKDrawing {
-        PKDrawing(strokes: strokes.map { $0.getPkStroke() })
+    func getPkDrawing(canvasSize: CGSize) -> PKDrawing {
+        PKDrawing(strokes: strokes.map { $0.getPkStroke(canvasSize: canvasSize) })
     }
     
-    static func build(pkDrawing: PKDrawing) -> Self {
-        Drawing(strokes: pkDrawing.strokes.map { .build(pkStroke: $0) })
-    }
-}
-
-extension PKDrawing {
-    func getDrawing() -> Drawing {
-        Drawing(strokes: strokes.map { .build(pkStroke: $0) })
-    }
-    
-    static func build(strokes: [Stroke]) -> Self {
-        PKDrawing(strokes: strokes.map { $0.getPkStroke() })
+    static func build(pkDrawing: PKDrawing, canvasSize: CGSize) -> Self {
+        Drawing(strokes: pkDrawing.strokes.map { .build(pkStroke: $0, canvasSize: canvasSize) })
     }
 }
