@@ -24,8 +24,8 @@ struct CanvasView: View {
     var body: some View {
         CanvasUIView(
             canvasView: $canvasView,
-            canvasViewDelegate: isBackground ? nil : CanvasViewHandler(),
-            sketcher: isBackground ? nil : Sketcher()
+            canvasViewDelegate: isBackground ? nil : CanvasViewDelegate(),
+            sketcher: isBackground ? nil : CanvasSketcher(canvasView: canvasView)
         )
         .onAppear {
             applyToolPickerIfNeeded()

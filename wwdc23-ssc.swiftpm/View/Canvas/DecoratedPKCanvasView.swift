@@ -36,6 +36,14 @@ final class DecoratedPKCanvasView: PKCanvasView {
         becomeFirstResponder()
     }
     
+    func getStrokesCount() -> Int {
+        drawing.strokes.count
+    }
+    
+    func getStrokePointsCount() -> Int {
+        drawing.getAllPoints().count
+    }
+    
     private func getPoint(by touches: Set<UITouch>) -> CGPoint {
         let touch = touches.first!
         let point = touch.location(in: self)

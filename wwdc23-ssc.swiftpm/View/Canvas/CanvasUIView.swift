@@ -9,9 +9,9 @@ import SwiftUI
 import PencilKit
 
 struct CanvasUIView: UIViewRepresentable {
-    typealias UIViewType = PKCanvasView
+    typealias UIViewType = DecoratedPKCanvasView
     
-    @Binding var canvasView: DecoratedPKCanvasView
+    @Binding var canvasView: UIViewType
     let canvasViewDelegate: PKCanvasViewDelegate?
     let sketcher: Sketchable?
     
