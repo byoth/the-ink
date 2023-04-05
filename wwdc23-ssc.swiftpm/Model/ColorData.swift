@@ -55,4 +55,5 @@ extension ColorData: CompactCodable {
 
 extension ColorData {
     static let black = ColorData(red: 0, green: 0, blue: 0, alpha: 1)
+    static let red = ColorData(red: 1, green: 0, blue: 0, alpha: 1)
 }

@@ -11,7 +11,7 @@ struct ResourceGaugeView: View {
     private static let lineWidth: CGFloat = 16
     private static let sizeLength: CGFloat = 64
     
-    @ObservedObject var resource: DrawingResource
+    @ObservedObject var resource: SketchingResource
     
     var body: some View {
         ZStack {
@@ -38,17 +38,13 @@ struct ResourceGaugeView: View {
                 )
                 .shadow(radius: getShadowRadius())
             Circle()
-                .trim(from: 0.0, to: getValue())
+                .trim(from: 0.0, to: resource.getPercentage())
                 .stroke(.black, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90.0))
         }
         .frame(width: Self.sizeLength, height: Self.sizeLength)
         .scaleEffect(x: getScale(), y: getScale())
-        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: getValue())
-    }
-    
-    private func getValue() -> CGFloat {
-        resource.getPercentage()
+        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: resource.getPercentage())
     }
     
     private func getImageName() -> String {

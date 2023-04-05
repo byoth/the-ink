@@ -6,41 +6,46 @@
 //
 
 import SwiftUI
-import PencilKit
 
 struct CanvasLayerView: View {
     private let drawing: Drawing?
-    private weak var sketcher: CanvasViewSketcher?
-    @State private var canvasView = DecoratedPKCanvasView()
+    private weak var toolPicker: ToolPicker?
+    private weak var receiver: CanvasViewSketchingReceiver?
+    @State private var canvasView = InheritedPKCanvasView()
     
     init(drawing: Drawing? = nil,
-         sketcher: CanvasViewSketcher? = nil) {
+         toolPicker: ToolPicker? = .shared,
+         receiver: CanvasViewSketchingReceiver? = nil) {
         self.drawing = drawing
-        self.sketcher = sketcher
+        self.toolPicker = toolPicker
+        self.receiver = receiver
+        if isForeground() {
+            setupSketching()
+        }
     }
     
     var body: some View {
-        CanvasUIView(
-            canvasView: $canvasView,
-            sketcher: sketcher
-        )
-        .onAppear {
-            applyDrawing(drawing)
-            applySketcher()
-        }
-    }
-    
-    private func applyDrawing(_ drawing: Drawing?) {
-        DispatchQueue.main.async {
-            guard let drawing = drawing?.getPkDrawing(canvasSize: canvasView.bounds.size) else {
-                return
+        CanvasUIView(canvasView: $canvasView, receiver: receiver)
+            .onAppear {
+                DispatchQueue.main.async {
+                    setupDrawing()
+                }
             }
-            self.canvasView.setDrawing(drawing)
-        }
     }
     
-    private func applySketcher() {
-        sketcher?.canvasView = canvasView
-        sketcher?.applyToolPicker()
+    private func setupDrawing() {
+        guard let drawing = drawing?.getPkDrawing(canvasSize: canvasView.bounds.size) else {
+            return
+        }
+        canvasView.setup(drawing: drawing)
+    }
+    
+    private func setupSketching() {
+        toolPicker?.connectCanvasView(canvasView)
+        canvasView.receiver = receiver
+    }
+    
+    private func isForeground() -> Bool {
+        receiver != nil
     }
 }

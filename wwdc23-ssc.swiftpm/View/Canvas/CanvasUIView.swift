@@ -6,19 +6,18 @@
 //
 
 import SwiftUI
-import PencilKit
 
 struct CanvasUIView: UIViewRepresentable {
-    typealias UIViewType = DecoratedPKCanvasView
+    typealias UIViewType = InheritedPKCanvasView
     
     @Binding var canvasView: UIViewType
-    weak var sketcher: CanvasViewSketcher?
+    weak var receiver: CanvasViewSketchingReceiver?
     
     // TODO: init with @Binding
     
     func makeUIView(context: Context) -> UIViewType {
-        canvasView.delegate = sketcher
-        canvasView.sketcher = sketcher
+        canvasView.delegate = receiver
+        canvasView.receiver = receiver
         canvasView.backgroundColor = .clear
         return canvasView
     }

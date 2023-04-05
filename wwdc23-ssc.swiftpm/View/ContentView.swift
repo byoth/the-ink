@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var resource = DrawingResource()
+    @State private var resource = SketchingResource()
     
     var body: some View {
         ZStack {

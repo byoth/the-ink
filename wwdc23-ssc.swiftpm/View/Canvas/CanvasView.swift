@@ -8,28 +8,43 @@
 import SwiftUI
 
 struct CanvasView: View {
-    @ObservedObject var resource: DrawingResource
-    @State private var sketcher = CanvasViewSketcher()
+    @ObservedObject var viewModel: CanvasViewModel
+    @State private var receiver = CanvasViewSketchingReceiver()
+    
+    init(resource: SketchingResource) {
+        viewModel = CanvasViewModel(resource: resource)
+        receiver.viewModel = viewModel
+    }
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Color.white
-                .cornerRadius(24)
-                .shadow(radius: 16, y: 8)
-            CanvasLayerView(drawing: .background)
-            CanvasLayerView(drawing: .foreground, sketcher: sketcher)
-            ResourceGaugeView(resource: resource)
+            ZStack {
+                Color.white
+                CanvasLayerView(drawing: .background)
+                CanvasLayerView(drawing: .foreground, receiver: receiver)
+                if viewModel.isCanvasBlocked() {
+                    blockingView()
+                }
+            }
+            .cornerRadius(24)
+            .shadow(radius: 16, y: 8)
+            ResourceGaugeView(resource: viewModel.resource)
         }
         .aspectRatio(1 / 1, contentMode: .fit)
-        .onAppear {
-            sketcher.resource = resource
-        }
+    }
+    
+    private func blockingView() -> some View {
+        Color.white
+            .opacity(0.01)
+            .onTapGesture {
+                viewModel.guideUserToGetResource()
+            }
     }
 }
 
 struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
-        let resource = DrawingResource()
+        let resource = SketchingResource()
         return CanvasView(resource: resource)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Palette.swift
+//  SketchingResource.swift
 //  wwdc23-ssc
 //
 //  Created by byo on 2023/04/04.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class DrawingResource: ObservableObject {
+final class SketchingResource: ObservableObject {
     @Published private var amount: Int
     private var maxAmount: Int
     
@@ -17,9 +17,11 @@ final class DrawingResource: ObservableObject {
         self.maxAmount = maxAmount
     }
     
-    func setAmount(_ amount: Int, maxAmount: Int) {
+    func setAmount(_ amount: Int, maxAmount: Int? = nil) {
         self.amount = amount
-        self.maxAmount = maxAmount
+        if let maxAmount = maxAmount {
+            self.maxAmount = maxAmount
+        }
     }
     
     func getPercentage() -> CGFloat {
