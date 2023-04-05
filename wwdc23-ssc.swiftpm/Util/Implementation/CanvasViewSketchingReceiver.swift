@@ -9,6 +9,7 @@ import PencilKit
 
 final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasViewDelegate {
     weak var viewModel: CanvasViewModel?
+    weak var layer: CanvasLayer?
     
     func begin(point: CGPoint) {
     }
@@ -23,16 +24,8 @@ final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanva
         if let canvasView = canvasView as? InheritedPKCanvasView {
             viewModel?.updateResource(canvasView: canvasView)
         }
+        layer?.pkDrawing = canvasView.drawing
         printDrawing(canvasView: canvasView)
-    }
-    
-    func canvasViewDidFinishRendering(_ canvasView: PKCanvasView) {
-    }
-    
-    func canvasViewDidBeginUsingTool(_ canvasView: PKCanvasView) {
-    }
-    
-    func canvasViewDidEndUsingTool(_ canvasView: PKCanvasView) {
     }
     
     private func printDrawing(canvasView: PKCanvasView) {

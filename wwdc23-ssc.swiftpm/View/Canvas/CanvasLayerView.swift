@@ -8,15 +8,15 @@
 import SwiftUI
 
 struct CanvasLayerView: View {
-    private let drawing: Drawing?
+    private weak var layer: CanvasLayer?
     private weak var toolPicker: ToolPicker?
     private weak var receiver: CanvasViewSketchingReceiver?
     @State private var canvasView = InheritedPKCanvasView()
     
-    init(drawing: Drawing? = nil,
+    init(layer: CanvasLayer? = nil,
          toolPicker: ToolPicker? = .shared,
          receiver: CanvasViewSketchingReceiver? = nil) {
-        self.drawing = drawing
+        self.layer = layer
         self.toolPicker = toolPicker
         self.receiver = receiver
         if isForeground() {
@@ -25,23 +25,27 @@ struct CanvasLayerView: View {
     }
     
     var body: some View {
-        CanvasUIView(canvasView: $canvasView, receiver: receiver)
-            .onAppear {
-                DispatchQueue.main.async {
-                    setupDrawing()
+        ZStack {
+            CanvasUIView(canvasView: $canvasView, receiver: receiver)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        setupDrawing()
+                    }
                 }
-            }
+        }
     }
     
     private func setupDrawing() {
-        guard let drawing = drawing?.getPkDrawing(canvasSize: canvasView.bounds.size) else {
+        guard let drawing = layer?.type.templateDrawing.getPkDrawing(canvasSize: canvasView.bounds.size) else {
             return
         }
+        layer?.pkDrawing = drawing
         canvasView.setup(drawing: drawing)
     }
     
     private func setupSketching() {
         toolPicker?.connectCanvasView(canvasView)
+        receiver?.layer = layer
         canvasView.receiver = receiver
     }
     

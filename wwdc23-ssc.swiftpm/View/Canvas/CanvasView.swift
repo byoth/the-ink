@@ -17,20 +17,35 @@ struct CanvasView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            ZStack {
-                Color.white
-                CanvasLayerView(drawing: .background)
-                CanvasLayerView(drawing: .foreground, receiver: receiver)
-                if viewModel.isCanvasBlocked() {
-                    blockingView()
+        GeometryReader { geometry in
+            ZStack(alignment: .bottomTrailing) {
+                ZStack {
+                    Color.white
+                    layersView()
+                    if viewModel.isCanvasBlocked() {
+                        blockingView()
+                    }
+                }
+                .cornerRadius(24)
+                .shadow(radius: 16, y: 8)
+                VStack {
+                    Button("Compare") {
+                        viewModel.compareLayers(size: geometry.size)
+                    }
+                    ResourceGaugeView(resource: viewModel.resource)
                 }
             }
-            .cornerRadius(24)
-            .shadow(radius: 16, y: 8)
-            ResourceGaugeView(resource: viewModel.resource)
         }
         .aspectRatio(1 / 1, contentMode: .fit)
+    }
+    
+    private func layersView() -> some View {
+        ForEach(Array(zip(viewModel.layers.indices, viewModel.layers)), id: \.0) { index, layer in
+            CanvasLayerView(
+                layer: layer,
+                receiver: index == viewModel.layers.count - 1 ? receiver : nil
+            )
+        }
     }
     
     private func blockingView() -> some View {
