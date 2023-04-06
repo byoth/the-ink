@@ -22,10 +22,12 @@ final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanva
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         if let canvasView = canvasView as? InheritedPKCanvasView {
-            viewModel?.updateResource(canvasView: canvasView)
+            DispatchQueue.main.async {
+                self.viewModel?.updateResource(canvasView: canvasView)
+                self.viewModel?.updateProgress(canvasView: canvasView)
+            }
         }
         layer?.pkDrawing = canvasView.drawing
-        printDrawing(canvasView: canvasView)
     }
     
     private func printDrawing(canvasView: PKCanvasView) {

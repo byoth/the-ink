@@ -24,15 +24,15 @@ final class SketchingResource: ObservableObject {
         }
     }
     
-    func getPercentage() -> CGFloat {
+    func getRate() -> CGFloat {
         CGFloat(amount) / CGFloat(maxAmount)
     }
     
     func isFull() -> Bool {
-        getPercentage() >= 1
+        getRate() >= 1
     }
     
     func isEmpty() -> Bool {
-        getPercentage() <= 0
+        getRate() <= 0
     }
 }

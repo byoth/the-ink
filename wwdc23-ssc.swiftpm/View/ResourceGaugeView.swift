@@ -38,13 +38,13 @@ struct ResourceGaugeView: View {
                 )
                 .shadow(radius: getShadowRadius())
             Circle()
-                .trim(from: 0.0, to: resource.getPercentage())
+                .trim(from: 0.0, to: resource.getRate())
                 .stroke(.black, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
                 .rotationEffect(.degrees(-90.0))
         }
         .frame(width: Self.sizeLength, height: Self.sizeLength)
         .scaleEffect(x: getScale(), y: getScale())
-        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: resource.getPercentage())
+        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: resource.getRate())
     }
     
     private func getImageName() -> String {

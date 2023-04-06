@@ -11,8 +11,9 @@ struct CanvasView: View {
     @ObservedObject var viewModel: CanvasViewModel
     @State private var receiver = CanvasViewSketchingReceiver()
     
-    init(resource: SketchingResource) {
-        viewModel = CanvasViewModel(resource: resource)
+    init(resource: SketchingResource,
+         progress: SketchingProgress) {
+        viewModel = CanvasViewModel(resource: resource, progress: progress)
         receiver.viewModel = viewModel
     }
     
@@ -28,12 +29,7 @@ struct CanvasView: View {
                 }
                 .cornerRadius(24)
                 .shadow(radius: 16, y: 8)
-                VStack {
-                    Button("Compare") {
-                        viewModel.compareLayers(size: geometry.size)
-                    }
-                    ResourceGaugeView(resource: viewModel.resource)
-                }
+                ResourceGaugeView(resource: viewModel.resource)
             }
         }
         .aspectRatio(1 / 1, contentMode: .fit)
@@ -60,6 +56,7 @@ struct CanvasView: View {
 struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
         let resource = SketchingResource()
-        return CanvasView(resource: resource)
+        let progress = SketchingProgress()
+        return CanvasView(resource: resource, progress: progress)
     }
 }
