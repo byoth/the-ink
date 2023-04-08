@@ -21,8 +21,9 @@ struct SimulationView: View {
                         .ignoresSafeArea()
                     VStack {
                         ScriptView(progress: viewModel.progress)
-                            .padding(32)
-                        TaskListView()
+                            .frame(height: 160)
+                            .padding()
+                        TaskListView(sections: viewModel.taskSections)
                     }
                 }
                 CanvasView(resource: viewModel.resource, progress: viewModel.progress)
