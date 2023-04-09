@@ -50,11 +50,12 @@ final class CanvasViewModel: ObservableObject {
         let drawing1 = Drawing.build(pkDrawing: pkDrawing1, canvasSize: size)
         let drawing2 = Drawing.build(pkDrawing: pkDrawing2, canvasSize: size)
         let comparer = DrawingsComparer(drawing1: drawing1, drawing2: drawing2, size: size)
-        progress.setAmount(matchingRate: comparer.getMatchingRate())
+        let accuracy = comparer.getAccuracy()
+        progress.setAccuracy(accuracy)
     }
     
     func guideUserToGetResource() {
-        // TODO: - Toast or Script
+        // TODO: Toast or Script
     }
     
     func isCanvasBlocked() -> Bool {

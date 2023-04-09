@@ -9,18 +9,25 @@ import Foundation
 
 class TaskGauge {
     let title: String
-    var amount: Int
-    var maxAmount: Int
+    private var amount: Int?
+    private var maxAmount: Int?
     
     init(title: String,
-         amount: Int,
-         maxAmount: Int) {
+         amount: Int? = nil,
+         maxAmount: Int? = nil) {
         self.title = title
         self.amount = amount
         self.maxAmount = maxAmount
     }
     
-    func getPercentage() -> CGFloat {
-        .random(in: 0 ... 1) // CGFloat(amount) / CGFloat(maxAmount)
+    func setAmount(_ amount: Int, maxAmount: Int? = nil) {
+        self.amount = amount
+        if let maxAmount = maxAmount {
+            self.maxAmount = maxAmount
+        }
+    }
+    
+    func getRate() -> CGFloat {
+        CGFloat(amount ?? 0) / CGFloat(maxAmount ?? 1)
     }
 }

@@ -44,7 +44,10 @@ struct ResourceGaugeView: View {
         }
         .frame(width: Self.sizeLength, height: Self.sizeLength)
         .scaleEffect(x: getScale(), y: getScale())
-        .animation(.interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5), value: resource.getRate())
+        .animation(
+            .interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5),
+            value: resource.getRate()
+        )
     }
     
     private func getImageName() -> String {

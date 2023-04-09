@@ -8,21 +8,21 @@
 import Foundation
 
 final class SketchingProgress: ObservableObject {
-    @Published private var matchingRate: CGFloat
+    @Published private var accuracy: CGFloat
     
-    init(matchingRate: CGFloat = 0) {
-        self.matchingRate = matchingRate
+    init(accuracy: CGFloat = 0) {
+        self.accuracy = accuracy
     }
     
-    func setAmount(matchingRate: CGFloat) {
-        self.matchingRate = matchingRate
+    func setAccuracy(_ accuracy: CGFloat) {
+        self.accuracy = accuracy
     }
     
     func getRate() -> CGFloat {
-        matchingRate
+        accuracy
     }
     
     func getPercentage() -> Int {
-        Int(matchingRate * 100)
+        Int(accuracy * 100)
     }
 }

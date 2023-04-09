@@ -13,7 +13,7 @@ struct DrawingsComparer {
     let size: CGSize
     let scale: CGFloat = 1
     
-    func getMatchingRate() -> CGFloat {
+    func getAccuracy() -> CGFloat {
         let rect = CGRect(origin: .zero, size: size)
         let image1 = drawing1
             .getPkDrawing(canvasSize: size)
@@ -21,10 +21,10 @@ struct DrawingsComparer {
         let image2 = drawing2
             .getPkDrawing(canvasSize: size)
             .image(from: rect, scale: scale)
-        return getMatchingRateOfImagesAsTransparent(image1, image2)
+        return getAccuracyOfImagesAsTransparent(image1, image2)
     }
     
-    private func getMatchingRateOfImagesAsTransparent(_ image1: UIImage, _ image2: UIImage) -> CGFloat {
+    private func getAccuracyOfImagesAsTransparent(_ image1: UIImage, _ image2: UIImage) -> CGFloat {
         guard let cgImage1 = image1.cgImage,
               let cgImage2 = image2.cgImage else {
             return 0

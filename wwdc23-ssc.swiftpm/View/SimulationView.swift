@@ -23,7 +23,10 @@ struct SimulationView: View {
                         ScriptView(progress: viewModel.progress)
                             .frame(height: 160)
                             .padding()
-                        TaskListView(sections: viewModel.taskSections)
+                        TaskListView(
+                            sections: viewModel.taskSections,
+                            progress: viewModel.progress
+                        )
                     }
                 }
                 CanvasView(resource: viewModel.resource, progress: viewModel.progress)

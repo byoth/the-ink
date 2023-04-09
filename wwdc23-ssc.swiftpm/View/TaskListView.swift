@@ -8,7 +8,15 @@
 import SwiftUI
 
 struct TaskListView: View {
-    @StateObject private var viewModel = TaskListViewModel()
+    @ObservedObject private var viewModel: TaskListViewModel
+    
+    init(sections: [TaskSection],
+         progress: SketchingProgress) {
+        viewModel = TaskListViewModel(
+            sections: sections,
+            progress: progress
+        )
+    }
     
     var body: some View {
         List {
@@ -18,14 +26,17 @@ struct TaskListView: View {
                         lockedView()
                     } else {
                         ForEach(section.tasks) { task in
+                            let isActive = viewModel.isActive(section: section, task: task)
                             HStack {
                                 Text(task.title)
                                 Spacer()
                                 if viewModel.isCompleted(task: task) {
                                     Text("✅")
+                                } else if isActive {
+                                    ProgressView()
                                 }
                             }
-                            if let gauge = task.gauge {
+                            if let gauge = task.gauge, isActive {
                                 gaugeView(gauge: gauge)
                             }
                         }
@@ -53,7 +64,11 @@ struct TaskListView: View {
             GeometryReader { geometry in
                 RoundedRectangle(cornerRadius: 4)
                     .fill(Color.orange)
-                    .frame(width: geometry.size.width * gauge.getPercentage())
+                    .frame(width: geometry.size.width * viewModel.getCurrentGaugeRate())
+                    .animation(
+                        .interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5),
+                        value: viewModel.getCurrentGaugeRate()
+                    )
             }
             .background(Color.black.opacity(0.1))
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -65,6 +80,10 @@ struct TaskListView: View {
 
 struct TaskListView_Previews: PreviewProvider {
     static var previews: some View {
-        TaskListView()
+        let progress = SketchingProgress()
+        return TaskListView(
+            sections: [.GetResources, .BuildFactory, .MakeProducts],
+            progress: progress
+        )
     }
 }
