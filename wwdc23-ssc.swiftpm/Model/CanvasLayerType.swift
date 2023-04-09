@@ -8,18 +8,18 @@
 import Foundation
 
 enum CanvasLayerType: String {
-    case mountain
+    case background
     case factoryGuideline
-    case trees
+    case foreground
     
     var templateDrawing: Drawing {
         switch self {
-        case .mountain:
-            return .mountain
+        case .background:
+            return .background
         case .factoryGuideline:
             return .factoryGuideline
-        case .trees:
-            return .trees
+        case .foreground:
+            return .foreground
         }
     }
 }

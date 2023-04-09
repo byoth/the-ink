@@ -31,6 +31,7 @@ final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanva
             }
         }
         layer?.pkDrawing = canvasView.drawing
+        printDrawing(canvasView: canvasView)
     }
     
     private func printDrawing(canvasView: PKCanvasView) {

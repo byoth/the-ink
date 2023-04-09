@@ -16,7 +16,7 @@ final class CanvasViewModel: ObservableObject {
     let progress: SketchingProgress
     private var cancellables = Set<AnyCancellable>()
     
-    init(layerTypes: [CanvasLayerType] = [.factoryGuideline, .mountain, .trees],
+    init(layerTypes: [CanvasLayerType] = [.background, .factoryGuideline, .foreground],
          toolPicker: ToolPicker = .shared,
          resource: SketchingResource,
          progress: SketchingProgress) {
@@ -39,11 +39,14 @@ final class CanvasViewModel: ObservableObject {
     func updateResource(canvasView: InheritedPKCanvasView) {
         let initialPointsCount = canvasView.getInitialPointCount()
         let currentPointsCount = canvasView.drawing.getPointsCount()
-        resource.setAmount(initialPointsCount - currentPointsCount, maxAmount: initialPointsCount)
+        resource.setAmount(
+            initialPointsCount - currentPointsCount,
+            maxAmount: Int(Double(initialPointsCount) * 0.9)
+        )
     }
     
     func updateProgress(canvasView: PKCanvasView) {
-        guard let pkDrawing1 = layers.first?.pkDrawing,
+        guard let pkDrawing1 = layers[safe: layers.count - 2]?.pkDrawing,
               let pkDrawing2 = layers.last?.pkDrawing else {
             return
         }

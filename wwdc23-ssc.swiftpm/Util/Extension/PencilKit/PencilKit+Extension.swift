@@ -23,6 +23,6 @@ extension PKStroke {
 
 extension PKStrokePath {
     func getAllPoints() -> [PKStrokePoint] {
-        interpolatedPoints(by: .distance(10)).map { $0 }
+        interpolatedPoints(by: .distance(4)).map { $0 }
     }
 }
