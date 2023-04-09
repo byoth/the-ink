@@ -42,20 +42,32 @@ extension Task {
     static let RemoveRocks = Task(title: "Remove the rocks")
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
-        gauge: TaskGauge(title: "INK GAUGE")
+        gauge: TaskGauge(
+            title: "INK GAUGE",
+            sourceType: SketchingResource.self
+        )
     )
     static let MakeConstructionSite = Task(
         title: "Make a construction site",
-        gauge: TaskGauge(title: "BUILD RATE")
+        gauge: TaskGauge(
+            title: "BUILD RATE",
+            sourceType: SketchingProgress.self
+        )
     )
     static let BuildFactory = Task(
         title: "Build a factory",
-        gauge: TaskGauge(title: "BUILD RATE")
+        gauge: TaskGauge(
+            title: "BUILD RATE",
+            sourceType: SketchingProgress.self
+        )
     )
     static let AirPollution = Task(title: "Air Pollution")
     static let WaterPollution = Task(title: "Water Pollution")
     static let MakeProducts = Task(
         title: "Make products",
-        gauge: TaskGauge(title: "PRODUCTION RATE")
+        gauge: TaskGauge(
+            title: "PRODUCTION RATE",
+            sourceType: SketchingProgress.self
+        )
     )
 }

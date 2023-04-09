@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class SketchingResource: ObservableObject {
+final class SketchingResource: ObservableObject, Gaugeable {
     @Published private var amount: Int
     private var maxAmount: Int
     
@@ -26,13 +26,5 @@ final class SketchingResource: ObservableObject {
     
     func getRate() -> CGFloat {
         CGFloat(amount) / CGFloat(maxAmount)
-    }
-    
-    func isFull() -> Bool {
-        getRate() >= 1
-    }
-    
-    func isEmpty() -> Bool {
-        getRate() <= 0
     }
 }

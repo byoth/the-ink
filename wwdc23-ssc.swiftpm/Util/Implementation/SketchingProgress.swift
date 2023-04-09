@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class SketchingProgress: ObservableObject {
+final class SketchingProgress: ObservableObject, Gaugeable {
     @Published private var accuracy: CGFloat
     
     init(accuracy: CGFloat = 0) {
@@ -20,9 +20,5 @@ final class SketchingProgress: ObservableObject {
     
     func getRate() -> CGFloat {
         accuracy
-    }
-    
-    func getPercentage() -> Int {
-        Int(accuracy * 100)
     }
 }

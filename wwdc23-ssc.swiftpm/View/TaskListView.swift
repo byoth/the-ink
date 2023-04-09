@@ -11,9 +11,11 @@ struct TaskListView: View {
     @ObservedObject private var viewModel: TaskListViewModel
     
     init(sections: [TaskSection],
+         resource: SketchingResource,
          progress: SketchingProgress) {
         viewModel = TaskListViewModel(
             sections: sections,
+            resource: resource,
             progress: progress
         )
     }
@@ -26,22 +28,14 @@ struct TaskListView: View {
                         lockedView()
                     } else {
                         ForEach(section.tasks) { task in
-                            let isActive = viewModel.isActive(section: section, task: task)
-                            HStack {
-                                Text(task.title)
-                                Spacer()
-                                if viewModel.isCompleted(task: task) {
-                                    Text("✅")
-                                } else if isActive {
-                                    ProgressView()
-                                }
-                            }
-                            if let gauge = task.gauge, isActive {
-                                gaugeView(gauge: gauge)
-                            }
+                            taskView(section: section, task: task)
                         }
                     }
                 }
+                .animation(
+                    .easeInOut(duration: 1),
+                    value: viewModel.getCurrentStepHashValue()
+                )
             }
         }
     }
@@ -54,6 +48,24 @@ struct TaskListView: View {
             Spacer()
         }
         .frame(height: 120)
+    }
+    
+    private func taskView(section: TaskSection, task: Task) -> some View {
+        Group {
+            let isActive = viewModel.isActive(section: section, task: task)
+            HStack {
+                Text(task.title)
+                Spacer()
+                if viewModel.isCompleted(task: task) {
+                    Text("✅")
+                } else if isActive {
+                    ProgressView()
+                }
+            }
+            if let gauge = task.gauge, isActive {
+                gaugeView(gauge: gauge)
+            }
+        }
     }
     
     private func gaugeView(gauge: TaskGauge) -> some View {
@@ -81,8 +93,10 @@ struct TaskListView: View {
 struct TaskListView_Previews: PreviewProvider {
     static var previews: some View {
         let progress = SketchingProgress()
+        let resource = SketchingResource()
         return TaskListView(
             sections: [.GetResources, .BuildFactory, .MakeProducts],
+            resource: resource,
             progress: progress
         )
     }

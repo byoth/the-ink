@@ -20,11 +20,12 @@ struct SimulationView: View {
                         .opacity(0.1)
                         .ignoresSafeArea()
                     VStack {
-                        ScriptView(progress: viewModel.progress)
+                        ScriptView(text: "Hello, world!")
                             .frame(height: 160)
                             .padding()
                         TaskListView(
                             sections: viewModel.taskSections,
+                            resource: viewModel.resource,
                             progress: viewModel.progress
                         )
                     }

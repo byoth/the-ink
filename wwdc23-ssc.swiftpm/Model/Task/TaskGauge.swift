@@ -7,15 +7,18 @@
 
 import Foundation
 
-class TaskGauge {
+class TaskGauge: Gaugeable {
     let title: String
+    let sourceType: Gaugeable.Type
     private var amount: Int?
     private var maxAmount: Int?
     
     init(title: String,
+         sourceType: Gaugeable.Type,
          amount: Int? = nil,
          maxAmount: Int? = nil) {
         self.title = title
+        self.sourceType = sourceType
         self.amount = amount
         self.maxAmount = maxAmount
     }

@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct ScriptView: View {
-    @ObservedObject var progress: SketchingProgress
-    
-    var text: String {
-        "(test)\nThe factory build rate is \(progress.getPercentage())%."
-    }
+    let text: String
     
     var body: some View {
         Text(text)
@@ -24,7 +20,6 @@ struct ScriptView: View {
 
 struct ScriptView_Previews: PreviewProvider {
     static var previews: some View {
-        let progress = SketchingProgress()
-        return ScriptView(progress: progress)
+        ScriptView(text: "Hello, world!")
     }
 }
