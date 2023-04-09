@@ -70,6 +70,10 @@ final class TaskListViewModel: ObservableObject {
         getSectionIndex(section: section) == currentSectionIndex && getTaskIndex(task: task) == currentTaskIndex
     }
     
+    func isCompleted(section: TaskSection) -> Bool {
+        getSectionIndex(section: section) < currentSectionIndex
+    }
+    
     func isCompleted(task: Task) -> Bool {
         getTaskIndex(task: task) < currentTaskIndex
     }

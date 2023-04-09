@@ -16,6 +16,10 @@ class Task {
         self.title = title
         self.gauge = gauge
     }
+    
+    func isCompletable() -> Bool {
+        gauge != nil
+    }
 }
 
 extension Task: Identifiable, Hashable {

@@ -57,7 +57,7 @@ final class CanvasViewModel: ObservableObject {
             let comparer = DrawingsComparer(drawing1: drawing1, drawing2: drawing2, size: size)
             let accuracy = comparer.getAccuracy()
             DispatchQueue.main.async {
-                self.progress.setAccuracy(accuracy)
+                self.progress.setAccuracy(accuracy * 1.1)
             }
         }
     }

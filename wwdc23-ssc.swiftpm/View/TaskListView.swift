@@ -56,7 +56,7 @@ struct TaskListView: View {
             HStack {
                 Text(task.title)
                 Spacer()
-                if viewModel.isCompleted(task: task) {
+                if (task.isCompletable() && viewModel.isCompleted(task: task)) || viewModel.isCompleted(section: section) {
                     Text("✅")
                 } else if isActive {
                     ProgressView()
