@@ -20,15 +20,20 @@ struct CanvasView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottomTrailing) {
-                ZStack {
-                    Color.white
-                    layersView()
-                    if viewModel.isCanvasBlocked() {
-                        blockingView()
+                ZStack(alignment: .topLeading) {
+                    ZStack {
+                        Color.white
+                        layersView()
+                        if viewModel.isCanvasBlocked() {
+                            blockingView()
+                        }
+                    }
+                    .cornerRadius(24)
+                    .shadow(radius: 16, y: 8)
+                    ForEach(viewModel.animals) { animal in
+                        FleeingAnimalView(animal: animal)
                     }
                 }
-                .cornerRadius(24)
-                .shadow(radius: 16, y: 8)
                 ResourceGaugeView(resource: viewModel.resource)
             }
         }

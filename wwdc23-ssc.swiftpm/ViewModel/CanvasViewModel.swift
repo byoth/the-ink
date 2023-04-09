@@ -10,6 +10,7 @@ import PencilKit
 
 final class CanvasViewModel: ObservableObject {
     @Published var layers: [CanvasLayer]
+    @Published var animals: [FleeingAnimal] = []
     let toolPicker: ToolPicker
     let resource: SketchingResource
     let progress: SketchingProgress
@@ -47,11 +48,26 @@ final class CanvasViewModel: ObservableObject {
             return
         }
         let size = canvasView.bounds.size
-        let drawing1 = Drawing.build(pkDrawing: pkDrawing1, canvasSize: size)
-        let drawing2 = Drawing.build(pkDrawing: pkDrawing2, canvasSize: size)
-        let comparer = DrawingsComparer(drawing1: drawing1, drawing2: drawing2, size: size)
-        let accuracy = comparer.getAccuracy()
-        progress.setAccuracy(accuracy)
+        DispatchQueue.global(qos: .userInteractive).async {
+            let drawing1 = Drawing.build(pkDrawing: pkDrawing1, canvasSize: size)
+            let drawing2 = Drawing.build(pkDrawing: pkDrawing2, canvasSize: size)
+            let comparer = DrawingsComparer(drawing1: drawing1, drawing2: drawing2, size: size)
+            let accuracy = comparer.getAccuracy()
+            DispatchQueue.main.async {
+                self.progress.setAccuracy(accuracy)
+            }
+        }
+    }
+    
+    func appendFleeingAnimal(origin: CGPoint) {
+        guard getTool() is PKEraserTool else {
+            return
+        }
+        let animal = FleeingAnimal(origin: origin)
+        animals.append(animal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.animals.removeAll { $0 === animal }
+        }
     }
     
     func guideUserToGetResource() {

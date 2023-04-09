@@ -15,6 +15,9 @@ final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanva
     }
     
     func move(point: CGPoint) {
+        if Int.random(in: 0 ..< 30) == 0 {
+            viewModel?.appendFleeingAnimal(origin: point)
+        }
     }
     
     func end(point: CGPoint) {

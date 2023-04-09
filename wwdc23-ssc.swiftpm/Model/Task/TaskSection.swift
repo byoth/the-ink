@@ -24,10 +24,10 @@ extension TaskSection: Identifiable, Hashable {
     }
     
     static func == (lhs: TaskSection, rhs: TaskSection) -> Bool {
-        lhs.title == rhs.title
+        lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(title)
+        hasher.combine(id)
     }
 }
