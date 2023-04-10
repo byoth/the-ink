@@ -56,7 +56,9 @@ extension Task {
         title: "Fill the ink gauge",
         gauge: TaskGauge(
             title: "INK GAUGE",
-            sourceType: SketchingResource.self
+            sourceType: SketchingResource.self,
+            startingBackgroundRGB: SkyRGB.first,
+            endingBackgroundRGB: SkyRGB.second
         )
     )
     
@@ -64,7 +66,9 @@ extension Task {
         title: "Make a construction site",
         gauge: TaskGauge(
             title: "BUILD RATE",
-            sourceType: SketchingProgress.self
+            sourceType: SketchingProgress.self,
+            startingBackgroundRGB: SkyRGB.second,
+            endingBackgroundRGB: SkyRGB.third
         )
     )
     
@@ -72,7 +76,9 @@ extension Task {
         title: "Build a factory",
         gauge: TaskGauge(
             title: "BUILD RATE",
-            sourceType: SketchingProgress.self
+            sourceType: SketchingProgress.self,
+            startingBackgroundRGB: SkyRGB.third,
+            endingBackgroundRGB: SkyRGB.fourth
         )
     )
     
@@ -90,7 +96,9 @@ extension Task {
         title: "Make products",
         gauge: TaskGauge(
             title: "PRODUCTION RATE",
-            sourceType: SketchingProgress.self
+            sourceType: SketchingProgress.self,
+            startingBackgroundRGB: SkyRGB.fourth,
+            endingBackgroundRGB: SkyRGB.fifth
         )
     )
 }

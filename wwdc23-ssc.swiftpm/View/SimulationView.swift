@@ -12,8 +12,12 @@ struct SimulationView: View {
     
     var body: some View {
         ZStack {
-            Color.accentColor
-                .ignoresSafeArea()
+            SkyBackgroundView(
+                taskManager: viewModel.taskManager,
+                resource: viewModel.resource,
+                progress: viewModel.progress
+            )
+            .ignoresSafeArea()
             HStack(spacing: 0) {
                 ZStack {
                     Color.white
