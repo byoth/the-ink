@@ -37,9 +37,21 @@ extension TaskSection {
 }
 
 extension Task {
-    static let RemoveForest = Task(title: "Remove the forest")
-    static let RemovePond = Task(title: "Remove the pond")
-    static let RemoveRocks = Task(title: "Remove the rocks")
+    static let RemoveForest = Task(
+        title: "Remove the forest",
+        isSkippable: true
+    )
+    
+    static let RemovePond = Task(
+        title: "Remove the pond",
+        isSkippable: true
+    )
+    
+    static let RemoveRocks = Task(
+        title: "Remove the rocks",
+        isSkippable: true
+    )
+    
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
         gauge: TaskGauge(
@@ -47,6 +59,7 @@ extension Task {
             sourceType: SketchingResource.self
         )
     )
+    
     static let MakeConstructionSite = Task(
         title: "Make a construction site",
         gauge: TaskGauge(
@@ -54,6 +67,7 @@ extension Task {
             sourceType: SketchingProgress.self
         )
     )
+    
     static let BuildFactory = Task(
         title: "Build a factory",
         gauge: TaskGauge(
@@ -61,8 +75,17 @@ extension Task {
             sourceType: SketchingProgress.self
         )
     )
-    static let AirPollution = Task(title: "Air Pollution")
-    static let WaterPollution = Task(title: "Water Pollution")
+    
+    static let AirPollution = Task(
+        title: "Air Pollution",
+        isSkippable: true
+    )
+    
+    static let WaterPollution = Task(
+        title: "Water Pollution",
+        isSkippable: true
+    )
+    
     static let MakeProducts = Task(
         title: "Make products",
         gauge: TaskGauge(

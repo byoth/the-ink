@@ -24,7 +24,7 @@ struct SimulationView: View {
                             .frame(height: 160)
                             .padding()
                         TaskListView(
-                            sections: viewModel.taskSections,
+                            taskManager: viewModel.taskManager,
                             resource: viewModel.resource,
                             progress: viewModel.progress
                         )

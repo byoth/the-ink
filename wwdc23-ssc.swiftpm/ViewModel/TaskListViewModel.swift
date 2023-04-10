@@ -9,27 +9,36 @@ import Foundation
 import Combine
 
 final class TaskListViewModel: ObservableObject {
-    // TODO: Task 관련 모델들을 struct로 바꿔볼까?
-    let sections: [TaskSection]
+    let taskManager: TaskManager
     let resource: SketchingResource
     let progress: SketchingProgress
-    @Published private var currentSectionIndex = 0
-    @Published private var currentTaskIndex = 3
+    @Published private var sections: [TaskSection]
     @Published private var currentGaugeRate = CGFloat(0)
     private var cancellables = Set<AnyCancellable>()
     
-    init(sections: [TaskSection],
+    init(taskManager: TaskManager,
          resource: SketchingResource,
          progress: SketchingProgress) {
-        self.sections = sections
+        self.taskManager = taskManager
         self.resource = resource
         self.progress = progress
+        sections = taskManager.getSections()
         subscribeObjects()
     }
     
     private func subscribeObjects() {
+        subscribeTaskManager()
         subscribeObjectForGauge(object: resource)
         subscribeObjectForGauge(object: progress)
+    }
+    
+    private func subscribeTaskManager() {
+        taskManager.objectWillChange
+            .sink { [weak self] in
+                self?.sections = self?.taskManager.getSections() ?? []
+                self?.currentGaugeRate = 0
+            }
+            .store(in: &cancellables)
     }
     
     private func subscribeObjectForGauge<O: ObservableObject & Gaugeable>(object: O) {
@@ -44,67 +53,37 @@ final class TaskListViewModel: ObservableObject {
     }
     
     private func updateGauge(object: Gaugeable) {
-        guard let gauge = getCurrentTask()?.gauge,
+        guard let gauge = taskManager.getCurrentTask()?.gauge,
               gauge.sourceType == type(of: object) else {
             return
         }
-        gauge.setAmount(object.getPercentage(), maxAmount: 100)
-        currentGaugeRate = gauge.getRate()
-        if gauge.isFull() {
-            gotoNextTask()
+        currentGaugeRate = object.getRate()
+        if object.isFull() {
+            taskManager.gotoNextTask()
         }
     }
     
-    // TODO: needs improvement
-    private func gotoNextTask() {
-        currentSectionIndex = 1
-        currentTaskIndex = 1
-        currentGaugeRate = 0
-    }
-    
     func isHidden(section: TaskSection) -> Bool {
-        getSectionIndex(section: section) > currentSectionIndex
+        taskManager.isHidden(section: section)
     }
     
     func isActive(section: TaskSection, task: Task) -> Bool {
-        getSectionIndex(section: section) == currentSectionIndex && getTaskIndex(task: task) == currentTaskIndex
+        taskManager.isActive(section: section, task: task)
     }
     
-    func isCompleted(section: TaskSection) -> Bool {
-        getSectionIndex(section: section) < currentSectionIndex
+    func isCompleted(section: TaskSection, task: Task) -> Bool {
+        (!task.isSkippable && taskManager.isCompleted(task: task)) || taskManager.isCompleted(section: section)
     }
     
-    func isCompleted(task: Task) -> Bool {
-        getTaskIndex(task: task) < currentTaskIndex
+    func getSections() -> [TaskSection] {
+        taskManager.getSections()
+    }
+    
+    func getCurrentStepHashValue() -> Int {
+        taskManager.getCurrentStepHashValue()
     }
     
     func getCurrentGaugeRate() -> CGFloat {
         currentGaugeRate
-    }
-    
-    func getCurrentStepHashValue() -> Int {
-        currentSectionIndex * 10 + currentTaskIndex
-    }
-    
-    private func getSectionIndex(section: TaskSection) -> Int {
-        sections
-            .enumerated()
-            .first { $0.element === section }?
-            .offset ?? -1
-    }
-    
-    private func getTaskIndex(task: Task) -> Int {
-        getCurrentSection()?.tasks
-            .enumerated()
-            .first { $0.element === task }?
-            .offset ?? -1
-    }
-    
-    private func getCurrentSection() -> TaskSection? {
-        sections[safe: currentSectionIndex]
-    }
-    
-    private func getCurrentTask() -> Task? {
-        getCurrentSection()?.tasks[safe: currentTaskIndex]
     }
 }

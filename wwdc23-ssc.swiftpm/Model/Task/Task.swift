@@ -7,18 +7,17 @@
 
 import Foundation
 
-class Task {
+struct Task {
     let title: String
+    let isSkippable: Bool
     let gauge: TaskGauge?
     
     init(title: String,
+         isSkippable: Bool = false,
          gauge: TaskGauge? = nil) {
         self.title = title
+        self.isSkippable = isSkippable
         self.gauge = gauge
-    }
-    
-    func isCompletable() -> Bool {
-        gauge != nil
     }
 }
 

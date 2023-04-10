@@ -8,7 +8,7 @@
 import Foundation
 
 final class SimulationViewModel: ObservableObject {
+    let taskManager = TaskManager()
     let resource = SketchingResource()
     let progress = SketchingProgress()
-    let taskSections: [TaskSection] = [.GetResources, .BuildFactory, .MakeProducts]
 }

@@ -10,11 +10,11 @@ import SwiftUI
 struct TaskListView: View {
     @ObservedObject private var viewModel: TaskListViewModel
     
-    init(sections: [TaskSection],
+    init(taskManager: TaskManager,
          resource: SketchingResource,
          progress: SketchingProgress) {
         viewModel = TaskListViewModel(
-            sections: sections,
+            taskManager: taskManager,
             resource: resource,
             progress: progress
         )
@@ -22,7 +22,7 @@ struct TaskListView: View {
     
     var body: some View {
         List {
-            ForEach(viewModel.sections) { section in
+            ForEach(viewModel.getSections()) { section in
                 Section(section.title) {
                     if viewModel.isHidden(section: section) {
                         lockedView()
@@ -56,7 +56,7 @@ struct TaskListView: View {
             HStack {
                 Text(task.title)
                 Spacer()
-                if (task.isCompletable() && viewModel.isCompleted(task: task)) || viewModel.isCompleted(section: section) {
+                if viewModel.isCompleted(section: section, task: task) {
                     Text("✅")
                 } else if isActive {
                     ProgressView()
@@ -92,10 +92,11 @@ struct TaskListView: View {
 
 struct TaskListView_Previews: PreviewProvider {
     static var previews: some View {
+        let taskManager = TaskManager()
         let progress = SketchingProgress()
         let resource = SketchingResource()
         return TaskListView(
-            sections: [.GetResources, .BuildFactory, .MakeProducts],
+            taskManager: taskManager,
             resource: resource,
             progress: progress
         )

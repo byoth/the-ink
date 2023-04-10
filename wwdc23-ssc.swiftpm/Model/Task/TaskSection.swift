@@ -7,9 +7,9 @@
 
 import Foundation
 
-class TaskSection {
+struct TaskSection {
     let title: String
-    let tasks: [Task]
+    var tasks: [Task]
     
     init(title: String,
          tasks: [Task]) {
