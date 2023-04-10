@@ -30,9 +30,13 @@ struct SimulationView: View {
                         )
                     }
                 }
-                CanvasView(resource: viewModel.resource, progress: viewModel.progress)
-                    .padding(32)
-                    .layoutPriority(1)
+                CanvasView(
+                    resource: viewModel.resource,
+                    progress: viewModel.progress,
+                    taskManager: viewModel.taskManager
+                )
+                .padding(32)
+                .layoutPriority(1)
             }
         }
     }

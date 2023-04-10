@@ -12,8 +12,13 @@ struct CanvasView: View {
     @State private var receiver = CanvasViewSketchingReceiver()
     
     init(resource: SketchingResource,
-         progress: SketchingProgress) {
-        viewModel = CanvasViewModel(resource: resource, progress: progress)
+         progress: SketchingProgress,
+         taskManager: TaskManager) {
+        viewModel = CanvasViewModel(
+            resource: resource,
+            progress: progress,
+            taskManager: taskManager
+        )
         receiver.viewModel = viewModel
     }
     
@@ -62,6 +67,11 @@ struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
         let resource = SketchingResource()
         let progress = SketchingProgress()
-        return CanvasView(resource: resource, progress: progress)
+        let taskManager = TaskManager()
+        return CanvasView(
+            resource: resource,
+            progress: progress,
+            taskManager: taskManager
+        )
     }
 }

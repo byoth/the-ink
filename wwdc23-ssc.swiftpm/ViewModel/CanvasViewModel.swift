@@ -14,16 +14,19 @@ final class CanvasViewModel: ObservableObject {
     let toolPicker: ToolPicker
     let resource: SketchingResource
     let progress: SketchingProgress
+    let taskManager: TaskManager
     private var cancellables = Set<AnyCancellable>()
     
     init(layerTypes: [CanvasLayerType] = [.background, .factoryGuideline, .foreground],
          toolPicker: ToolPicker = .shared,
          resource: SketchingResource,
-         progress: SketchingProgress) {
+         progress: SketchingProgress,
+         taskManager: TaskManager) {
         self.layers = layerTypes.map { CanvasLayer(type: $0) }
         self.toolPicker = toolPicker
         self.resource = resource
         self.progress = progress
+        self.taskManager = taskManager
         subscribeObjects()
     }
     
@@ -63,12 +66,12 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func appendFleeingAnimal(origin: CGPoint) {
-        guard getTool() is PKEraserTool else {
+        guard isErasing() && taskManager.canBeAnimalFleeing() else {
             return
         }
         let animal = FleeingAnimal(origin: origin)
         animals.append(animal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
             self.animals.removeAll { $0 === animal }
         }
     }
@@ -78,14 +81,10 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func isCanvasBlocked() -> Bool {
-        isResourceEmpty() && !(getTool() is PKEraserTool)
+        !isErasing() && resource.isEmpty()
     }
     
-    private func isResourceEmpty() -> Bool {
-        resource.isEmpty()
-    }
-    
-    private func getTool() -> PKTool {
-        toolPicker.getTool()
+    private func isErasing() -> Bool {
+        toolPicker.getTool() is PKEraserTool
     }
 }

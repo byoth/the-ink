@@ -12,15 +12,18 @@ class FleeingAnimal {
     let character: Character
     let movingOffset: CGPoint
     let jumpingY: CGFloat
+    let duration: TimeInterval
     
     init(origin: CGPoint,
          character: Character = Character(["🐿️", "🐇", "🦌"].randomElement()!),
          movingOffset: CGPoint = getRandomMovingOffset(),
-         jumpingY: CGFloat = CGFloat(Int.random(in: 20 ... 40))) {
+         jumpingY: CGFloat = CGFloat(Int.random(in: 20 ... 40)),
+         duration: TimeInterval = 1) {
         self.origin = origin
         self.character = character
         self.movingOffset = movingOffset
         self.jumpingY = jumpingY
+        self.duration = duration
     }
     
     private static func getRandomMovingOffset() -> CGPoint {
