@@ -1,5 +1,5 @@
 //
-//  DrawingsComparer.swift
+//  DrawingComparer.swift
 //  wwdc23-ssc
 //
 //  Created by byo on 2023/04/05.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct DrawingsComparer {
+struct DrawingComparer {
     let drawing1: Drawing
     let drawing2: Drawing
     let size: CGSize
