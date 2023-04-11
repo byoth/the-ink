@@ -13,7 +13,7 @@ struct SkyBackgroundView: View {
     init(taskManager: TaskManager,
          resource: SketchingResource,
          progress: SketchingProgress) {
-        viewModel = SkyBackgroundViewModel(
+        self.viewModel = SkyBackgroundViewModel(
             taskManager: taskManager,
             resource: resource,
             progress: progress

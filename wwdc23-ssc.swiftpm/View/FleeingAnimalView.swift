@@ -17,8 +17,8 @@ struct FleeingAnimalView: View {
     
     init(animal: FleeingAnimal) {
         self.animal = animal
-        x = animal.origin.x
-        y = animal.origin.y
+        self.x = animal.origin.x
+        self.y = animal.origin.y
     }
     
     var body: some View {

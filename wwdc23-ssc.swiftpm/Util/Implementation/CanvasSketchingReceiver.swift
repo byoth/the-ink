@@ -1,5 +1,5 @@
 //
-//  CanvasViewSketchingReceiver.swift
+//  CanvasSketchingReceiver.swift
 //  wwdc23-ssc
 //
 //  Created by byo on 2023/04/03.
@@ -7,16 +7,20 @@
 
 import PencilKit
 
-final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasViewDelegate {
-    weak var viewModel: CanvasViewModel?
+final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasViewDelegate {
+    let viewModel: CanvasViewModel
     weak var layer: CanvasLayer?
+    
+    init(viewModel: CanvasViewModel) {
+        self.viewModel = viewModel
+    }
     
     func begin(point: CGPoint) {
     }
     
     func move(point: CGPoint) {
         if Int.random(in: 0 ..< 30) == 0 {
-            viewModel?.appendFleeingAnimal(origin: point)
+            viewModel.appendFleeingAnimal(origin: point)
         }
     }
     
@@ -24,14 +28,18 @@ final class CanvasViewSketchingReceiver: NSObject, TouchEventReceivable, PKCanva
     }
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-        if let canvasView = canvasView as? InheritedPKCanvasView {
-            DispatchQueue.main.async {
-                self.viewModel?.updateResource(canvasView: canvasView)
-                self.viewModel?.updateProgress(canvasView: canvasView)
-            }
-        }
+        updateViewModel(canvasView: canvasView)
         layer?.pkDrawing = canvasView.drawing
-        printDrawing(canvasView: canvasView)
+    }
+    
+    private func updateViewModel(canvasView: PKCanvasView) {
+        guard let canvasView = canvasView as? InheritedPKCanvasView else {
+            return
+        }
+        DispatchQueue.main.async {
+            self.viewModel.updateResource(canvasView: canvasView)
+            self.viewModel.updateProgress(canvasView: canvasView)
+        }
     }
     
     private func printDrawing(canvasView: PKCanvasView) {

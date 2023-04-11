@@ -22,7 +22,7 @@ final class TaskListViewModel: ObservableObject {
         self.taskManager = taskManager
         self.resource = resource
         self.progress = progress
-        sections = taskManager.getSections()
+        self.sections = taskManager.getSections()
         subscribeObjects()
     }
     

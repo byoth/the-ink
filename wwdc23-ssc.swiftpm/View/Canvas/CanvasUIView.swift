@@ -11,7 +11,7 @@ struct CanvasUIView: UIViewRepresentable {
     typealias UIViewType = InheritedPKCanvasView
     
     @Binding var canvasView: UIViewType
-    weak var receiver: CanvasViewSketchingReceiver?
+    weak var receiver: CanvasSketchingReceiver?
     
     // TODO: init with @Binding
     

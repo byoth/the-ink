@@ -21,3 +21,17 @@ final class CanvasLayer {
         type.templateDrawing
     }
 }
+
+extension CanvasLayer: Identifiable, Hashable {
+    var id: CanvasLayerType {
+        type
+    }
+    
+    static func == (lhs: CanvasLayer, rhs: CanvasLayer) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}

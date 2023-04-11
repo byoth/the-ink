@@ -9,40 +9,86 @@ import SwiftUI
 
 struct SimulationView: View {
     @StateObject private var viewModel = SimulationViewModel()
+    @State private var isBackgroundHidden = true
+    @State private var isCanvasHidden = true
+    @State private var isSideHidden = true
     
     var body: some View {
         ZStack {
-            SkyBackgroundView(
-                taskManager: viewModel.taskManager,
-                resource: viewModel.resource,
-                progress: viewModel.progress
-            )
-            .ignoresSafeArea()
+            backgroundView()
             HStack(spacing: 0) {
-                ZStack {
-                    Color.white
-                        .opacity(0.1)
-                        .ignoresSafeArea()
-                    VStack {
-                        ScriptView(text: "Hello, world!")
-                            .frame(height: 160)
-                            .padding()
-                        TaskListView(
-                            taskManager: viewModel.taskManager,
-                            resource: viewModel.resource,
-                            progress: viewModel.progress
-                        )
-                    }
+                if !isSideHidden {
+                    sideView()
+                        .transition(.slide)
                 }
-                CanvasView(
-                    resource: viewModel.resource,
-                    progress: viewModel.progress,
-                    taskManager: viewModel.taskManager
-                )
-                .padding(32)
-                .layoutPriority(1)
+                canvasView()
+                    .layoutPriority(1)
             }
         }
+        .onAppear {
+            animateToAppear()
+        }
+    }
+    
+    private func backgroundView() -> some View {
+        SkyBackgroundView(
+            taskManager: viewModel.taskManager,
+            resource: viewModel.resource,
+            progress: viewModel.progress
+        )
+        .opacity(isBackgroundHidden ? 0 : 1)
+        .ignoresSafeArea()
+    }
+    
+    private func sideView() -> some View {
+        ZStack {
+            Color.white
+                .opacity(0.1)
+                .ignoresSafeArea()
+            VStack {
+                ScriptView(text: "Hello, world!")
+                    .frame(height: 160)
+                    .padding()
+                TaskListView(
+                    taskManager: viewModel.taskManager,
+                    resource: viewModel.resource,
+                    progress: viewModel.progress
+                )
+            }
+        }
+    }
+    
+    private func canvasView() -> some View {
+        CanvasView(
+            resource: viewModel.resource,
+            progress: viewModel.progress,
+            taskManager: viewModel.taskManager
+        )
+        .opacity(isCanvasHidden ? 0 : 1)
+        .offset(y: isCanvasHidden ? 100 : 0)
+        .padding(32)
+    }
+    
+    private func animateToAppear() {
+        withAnimation(.easeInOut(duration: 1)) {
+            isBackgroundHidden = false
+        }
+        withAnimation(.easeInOut(duration: 1).delay(0.5)) {
+            isCanvasHidden = false
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                isSideHidden = false
+            }
+        }
+    }
+}
+
+private extension SimulationView {
+    struct AnimationState: Equatable {
+        let isBackgroundHidden: Bool
+        let isCanvasHidden: Bool
+        let isSideHidden: Bool
     }
 }
 

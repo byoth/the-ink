@@ -13,7 +13,7 @@ struct TaskListView: View {
     init(taskManager: TaskManager,
          resource: SketchingResource,
          progress: SketchingProgress) {
-        viewModel = TaskListViewModel(
+        self.viewModel = TaskListViewModel(
             taskManager: taskManager,
             resource: resource,
             progress: progress

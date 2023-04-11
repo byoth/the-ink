@@ -8,37 +8,36 @@
 import SwiftUI
 
 struct CanvasView: View {
-    @ObservedObject var viewModel: CanvasViewModel
-    @State private var receiver = CanvasViewSketchingReceiver()
+    @ObservedObject private var viewModel: CanvasViewModel
+    @State private var receiver: CanvasSketchingReceiver
     
     init(resource: SketchingResource,
          progress: SketchingProgress,
          taskManager: TaskManager) {
-        viewModel = CanvasViewModel(
+        let viewModel = CanvasViewModel(
             resource: resource,
             progress: progress,
             taskManager: taskManager
         )
-        receiver.viewModel = viewModel
+        self.viewModel = viewModel
+        self.receiver = CanvasSketchingReceiver(viewModel: viewModel)
     }
     
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .bottomTrailing) {
                 ZStack(alignment: .topLeading) {
-                    ZStack {
-                        Color.white
-                        layersView()
-                        if viewModel.isCanvasBlocked() {
-                            blockingView()
-                        }
-                    }
-                    .cornerRadius(24)
-                    .shadow(radius: 16, y: 8)
+                    Color.white
+                    layersView()
                     ForEach(viewModel.animals) { animal in
                         FleeingAnimalView(animal: animal)
                     }
+                    if viewModel.isCanvasBlocked() {
+                        blockingView()
+                    }
                 }
+                .cornerRadius(24)
+                .shadow(radius: 16, y: 8)
                 ResourceGaugeView(resource: viewModel.resource)
             }
         }
@@ -46,7 +45,7 @@ struct CanvasView: View {
     }
     
     private func layersView() -> some View {
-        ForEach(Array(zip(viewModel.layers.indices, viewModel.layers)), id: \.0) { index, layer in
+        ForEach(Array(zip(viewModel.layers.indices, viewModel.layers)), id: \.1) { index, layer in
             CanvasLayerView(
                 layer: layer,
                 receiver: index == viewModel.layers.count - 1 ? receiver : nil
