@@ -77,14 +77,14 @@ struct SimulationView: View {
     }
     
     private func animateToAppear() {
-        withAnimation(.easeInOut(duration: 1)) {
+        withAnimation(.easeInOut(duration: 1).delay(0.5)) {
             isBackgroundHidden = false
         }
-        withAnimation(.easeInOut(duration: 1).delay(0.5)) {
+        withAnimation(.easeInOut(duration: 1).delay(1)) {
             isCanvasHidden = false
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation(.easeInOut(duration: 0.5)) {
+            withAnimation(.spring()) {
                 isSideHidden = false
             }
         }

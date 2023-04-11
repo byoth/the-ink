@@ -13,7 +13,7 @@ final class TaskListViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     @Published private var sections: [TaskSection]
-    @Published private var currentGaugeRate = CGFloat(0)
+    @Published private var currentProgressRate = CGFloat(0)
     private var cancellables = Set<AnyCancellable>()
     
     init(taskManager: TaskManager,
@@ -36,7 +36,7 @@ final class TaskListViewModel: ObservableObject {
         taskManager.objectWillChange
             .sink { [weak self] in
                 self?.sections = self?.taskManager.getSections() ?? []
-                self?.currentGaugeRate = 0
+                self?.currentProgressRate = 0
             }
             .store(in: &cancellables)
     }
@@ -57,7 +57,7 @@ final class TaskListViewModel: ObservableObject {
               progress.gaugeType == type(of: object) else {
             return
         }
-        currentGaugeRate = object.getRate()
+        currentProgressRate = object.getRate()
         if object.isFull() {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.taskManager.gotoNextTask()
@@ -74,7 +74,10 @@ final class TaskListViewModel: ObservableObject {
     }
     
     func isCompleted(section: TaskSection, task: Task) -> Bool {
-        (!task.isSkippable && taskManager.isCompleted(task: task)) || taskManager.isCompleted(section: section)
+        let isSectionCompleted = taskManager.isCompleted(section: section)
+        let isTaskCompleted = (!task.isSkippable && taskManager.isCompleted(task: task))
+        let isProgressCompleted = taskManager.getCurrentTask() == task && currentProgressRate >= 1
+        return isSectionCompleted || isTaskCompleted || isProgressCompleted
     }
     
     func getSections() -> [TaskSection] {
@@ -85,7 +88,7 @@ final class TaskListViewModel: ObservableObject {
         taskManager.getCurrentStepHashValue()
     }
     
-    func getCurrentGaugeRate() -> CGFloat {
-        currentGaugeRate
+    func getCurrentProgressRate() -> CGFloat {
+        currentProgressRate
     }
 }

@@ -60,7 +60,7 @@ struct CanvasView: View {
                 receiver: index == layers.count - 1 ? receiver : nil
             )
         }
-        .transition(.opacity)
+        .transition(.opacity.animation(.easeOut(duration: 0.5)))
     }
     
     private func blockingView() -> some View {

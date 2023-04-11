@@ -32,10 +32,6 @@ struct TaskListView: View {
                         }
                     }
                 }
-                .animation(
-                    .easeInOut(duration: 1),
-                    value: viewModel.getCurrentStepHashValue()
-                )
             }
         }
     }
@@ -76,10 +72,10 @@ struct TaskListView: View {
             GeometryReader { geometry in
                 RoundedRectangle(cornerRadius: 4)
                     .fill(Color.orange)
-                    .frame(width: geometry.size.width * viewModel.getCurrentGaugeRate())
+                    .frame(width: geometry.size.width * viewModel.getCurrentProgressRate())
                     .animation(
                         .interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5),
-                        value: viewModel.getCurrentGaugeRate()
+                        value: viewModel.getCurrentProgressRate()
                     )
             }
             .background(Color.black.opacity(0.1))
