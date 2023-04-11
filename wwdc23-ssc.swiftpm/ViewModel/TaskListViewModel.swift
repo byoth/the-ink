@@ -59,7 +59,7 @@ final class TaskListViewModel: ObservableObject {
         }
         currentGaugeRate = object.getRate()
         if object.isFull() {
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.taskManager.gotoNextTask()
             }
         }

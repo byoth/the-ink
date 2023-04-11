@@ -27,6 +27,11 @@ struct SimulationView: View {
         }
         .onAppear {
             animateToAppear()
+            
+            // TODO: 대신 Script 연동
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.viewModel.taskManager.gotoNextTask()
+            }
         }
     }
     

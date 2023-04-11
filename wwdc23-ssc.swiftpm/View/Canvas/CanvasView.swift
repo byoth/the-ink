@@ -29,7 +29,7 @@ struct CanvasView: View {
         GeometryReader { geometry in
             ZStack(alignment: .bottomTrailing) {
                 ZStack(alignment: .topLeading) {
-                    Color.white
+                    backgroundView()
                     layersView(layers: viewModel.getCurrentLayers())
                     ForEach(viewModel.animals) { animal in
                         FleeingAnimalView(animal: animal)
@@ -44,6 +44,12 @@ struct CanvasView: View {
             }
         }
         .aspectRatio(1 / 1, contentMode: .fit)
+    }
+    
+    private func backgroundView() -> some View {
+        Image("background")
+            .resizable()
+            .scaledToFit()
     }
     
     private func layersView(layers: [CanvasLayer]) -> some View {

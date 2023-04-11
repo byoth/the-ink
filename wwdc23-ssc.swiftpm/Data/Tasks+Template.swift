@@ -57,7 +57,7 @@ extension Task {
         title: "Fill the ink gauge",
         progress: TaskProgress(
             title: "INK GAUGE",
-            layerTypes: [.background, .foreground],
+            layerTypes: [.foreground],
             gaugeType: SketchingResource.self,
             startingBackgroundRGB: SkyRGB.first,
             endingBackgroundRGB: SkyRGB.second
@@ -68,7 +68,7 @@ extension Task {
         title: "Make a construction site",
         progress: TaskProgress(
             title: "BUILD RATE",
-            layerTypes: [.background, .constructionSiteGuideline, .foreground],
+            layerTypes: [.constructionSiteGuideline, .foreground],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.second,
             endingBackgroundRGB: SkyRGB.third
@@ -79,7 +79,7 @@ extension Task {
         title: "Build a factory",
         progress: TaskProgress(
             title: "BUILD RATE",
-            layerTypes: [.background, .factoryGuideline, .foreground],
+            layerTypes: [.factoryGuideline, .foreground],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth
@@ -100,7 +100,7 @@ extension Task {
         title: "Make products",
         progress: TaskProgress(
             title: "PRODUCTION RATE",
-            layerTypes: [.background, .foreground],
+            layerTypes: [.foreground],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.fourth,
             endingBackgroundRGB: SkyRGB.fifth

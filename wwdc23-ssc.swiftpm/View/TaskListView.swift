@@ -38,12 +38,6 @@ struct TaskListView: View {
                 )
             }
         }
-        .onAppear {
-            // TODO: 대신 Script 연동
-            DispatchQueue.main.async {
-                self.viewModel.taskManager.gotoNextTask()
-            }
-        }
     }
     
     private func lockedView() -> some View {
