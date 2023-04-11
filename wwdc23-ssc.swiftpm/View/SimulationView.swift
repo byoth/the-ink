@@ -68,7 +68,8 @@ struct SimulationView: View {
             allLayers: viewModel.allLayers,
             resource: viewModel.resource,
             progress: viewModel.progress,
-            taskManager: viewModel.taskManager
+            taskManager: viewModel.taskManager,
+            receiver: viewModel.receiver
         )
         .opacity(isCanvasHidden ? 0 : 1)
         .offset(y: isCanvasHidden ? 100 : 0)

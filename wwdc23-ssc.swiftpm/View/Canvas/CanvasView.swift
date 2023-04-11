@@ -9,20 +9,21 @@ import SwiftUI
 
 struct CanvasView: View {
     @ObservedObject private var viewModel: CanvasViewModel
-    @State private var receiver: CanvasSketchingReceiver
+    weak var receiver: CanvasSketchingReceiver?
     
     init(allLayers: [CanvasLayer],
          resource: SketchingResource,
          progress: SketchingProgress,
-         taskManager: TaskManager) {
-        let viewModel = CanvasViewModel(
+         taskManager: TaskManager,
+         receiver: CanvasSketchingReceiver) {
+        self.viewModel = CanvasViewModel(
             allLayers: allLayers,
             resource: resource,
             progress: progress,
             taskManager: taskManager
         )
-        self.viewModel = viewModel
-        self.receiver = CanvasSketchingReceiver(viewModel: viewModel)
+        self.receiver = receiver
+        receiver.viewModel = viewModel
     }
     
     var body: some View {
@@ -77,11 +78,13 @@ struct CanvasView_Previews: PreviewProvider {
         let resource = SketchingResource()
         let progress = SketchingProgress()
         let taskManager = TaskManager()
+        let receiver = CanvasSketchingReceiver()
         return CanvasView(
             allLayers: allLayers,
             resource: resource,
             progress: progress,
-            taskManager: taskManager
+            taskManager: taskManager,
+            receiver: receiver
         )
     }
 }

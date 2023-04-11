@@ -8,19 +8,15 @@
 import PencilKit
 
 final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasViewDelegate {
-    let viewModel: CanvasViewModel
+    weak var viewModel: CanvasViewModel?
     weak var layer: CanvasLayer?
-    
-    init(viewModel: CanvasViewModel) {
-        self.viewModel = viewModel
-    }
     
     func begin(point: CGPoint) {
     }
     
     func move(point: CGPoint) {
         if Int.random(in: 0 ..< 30) == 0 {
-            viewModel.appendFleeingAnimal(origin: point)
+            viewModel?.appendFleeingAnimal(origin: point)
         }
     }
     
@@ -37,8 +33,8 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasVie
             return
         }
         DispatchQueue.main.async {
-            self.viewModel.updateResource(canvasView: canvasView)
-            self.viewModel.updateProgress(canvasView: canvasView)
+            self.viewModel?.updateResource(canvasView: canvasView)
+            self.viewModel?.updateProgress(canvasView: canvasView)
         }
     }
     

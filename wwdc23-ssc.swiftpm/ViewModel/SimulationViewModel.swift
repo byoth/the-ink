@@ -12,4 +12,5 @@ final class SimulationViewModel: ObservableObject {
     let allLayers = CanvasLayerType.allCases.map { CanvasLayer(type: $0) }
     let resource = SketchingResource()
     let progress = SketchingProgress()
+    let receiver = CanvasSketchingReceiver()
 }
