@@ -8,17 +8,12 @@
 import Foundation
 
 final class TaskManager: ObservableObject {
-    @Published private var sections: [TaskSection]
+    let sections: [TaskSection]
     @Published private var currentSectionIndex = -1
     @Published private var currentTaskIndex = -1
     
     init(sections: [TaskSection] = [.GetResources, .BuildFactory, .MakeProducts]) {
         self.sections = sections
-        
-        // TODO: needs removing
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.gotoNextTask()
-        }
     }
     
     func gotoNextTask() {
@@ -54,20 +49,24 @@ final class TaskManager: ObservableObject {
         sections
     }
     
-    func getCurrentStepHashValue() -> Int {
-        currentSectionIndex * 10 + currentTaskIndex
+    func getCurrentSection() -> TaskSection? {
+        sections[safe: currentSectionIndex]
     }
     
     func getCurrentTask() -> Task? {
         getCurrentSection()?.tasks[safe: currentTaskIndex]
     }
     
-    func canBeAnimalFleeing() -> Bool {
-        currentSectionIndex == 0
+    func getCurrentStepHashValue() -> Int {
+        currentSectionIndex * 10 + currentTaskIndex
     }
     
-    private func getCurrentSection() -> TaskSection? {
-        sections[safe: currentSectionIndex]
+    func isSketchable() -> Bool {
+        currentSectionIndex < sections.count - 1
+    }
+    
+    func canBeAnimalFleeing() -> Bool {
+        currentSectionIndex == 0
     }
     
     private func getSectionIndex(section: TaskSection) -> Int {

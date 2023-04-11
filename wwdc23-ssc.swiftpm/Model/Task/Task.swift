@@ -10,14 +10,14 @@ import Foundation
 struct Task {
     let title: String
     let isSkippable: Bool
-    let gauge: TaskGauge?
+    let progress: TaskProgress?
     
     init(title: String,
          isSkippable: Bool = false,
-         gauge: TaskGauge? = nil) {
+         progress: TaskProgress? = nil) {
         self.title = title
         self.isSkippable = isSkippable
-        self.gauge = gauge
+        self.progress = progress
     }
 }
 

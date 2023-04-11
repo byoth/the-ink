@@ -9,6 +9,7 @@ import Foundation
 
 enum CanvasLayerType: String, CaseIterable {
     case background
+    case constructionSiteGuideline
     case factoryGuideline
     case foreground
     
@@ -16,6 +17,8 @@ enum CanvasLayerType: String, CaseIterable {
         switch self {
         case .background:
             return .background
+        case .constructionSiteGuideline:
+            return .constructionSiteGuideline
         case .factoryGuideline:
             return .factoryGuideline
         case .foreground:
@@ -25,7 +28,7 @@ enum CanvasLayerType: String, CaseIterable {
     
     func isGuideline() -> Bool {
         switch self {
-        case .factoryGuideline:
+        case .constructionSiteGuideline, .factoryGuideline:
             return true
         default:
             return false

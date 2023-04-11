@@ -53,13 +53,15 @@ final class TaskListViewModel: ObservableObject {
     }
     
     private func updateGauge(object: Gaugeable) {
-        guard let gauge = taskManager.getCurrentTask()?.gauge,
-              gauge.sourceType == type(of: object) else {
+        guard let progress = taskManager.getCurrentTask()?.progress,
+              progress.gaugeType == type(of: object) else {
             return
         }
         currentGaugeRate = object.getRate()
         if object.isFull() {
-            taskManager.gotoNextTask()
+            DispatchQueue.main.async {
+                self.taskManager.gotoNextTask()
+            }
         }
     }
     

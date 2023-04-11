@@ -53,6 +53,7 @@ struct CanvasView: View {
                 receiver: index == layers.count - 1 ? receiver : nil
             )
         }
+        .transition(.opacity)
     }
     
     private func blockingView() -> some View {
@@ -61,10 +62,6 @@ struct CanvasView: View {
             .onTapGesture {
                 viewModel.guideUserToGetResource()
             }
-    }
-    
-    private static func getLayers(layerTypes: [CanvasLayerType]) -> [CanvasLayer] {
-        layerTypes.map { CanvasLayer(type: $0) }
     }
 }
 

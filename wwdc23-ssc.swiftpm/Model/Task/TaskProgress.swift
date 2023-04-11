@@ -1,5 +1,5 @@
 //
-//  TaskGauge.swift
+//  TaskProgress.swift
 //  wwdc23-ssc
 //
 //  Created by byo on 2023/04/08.
@@ -7,18 +7,21 @@
 
 import Foundation
 
-struct TaskGauge {
+struct TaskProgress {
     let title: String
-    let sourceType: Gaugeable.Type
+    let layerTypes: [CanvasLayerType]
+    let gaugeType: Gaugeable.Type
     let startingBackgroundRGB: RGB
     let endingBackgroundRGB: RGB
     
     init(title: String,
-         sourceType: Gaugeable.Type,
+         layerTypes: [CanvasLayerType],
+         gaugeType: Gaugeable.Type,
          startingBackgroundRGB: RGB,
          endingBackgroundRGB: RGB) {
         self.title = title
-        self.sourceType = sourceType
+        self.layerTypes = layerTypes
+        self.gaugeType = gaugeType
         self.startingBackgroundRGB = startingBackgroundRGB
         self.endingBackgroundRGB = endingBackgroundRGB
     }

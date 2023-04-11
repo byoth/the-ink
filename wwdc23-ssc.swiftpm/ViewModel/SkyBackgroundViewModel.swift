@@ -25,11 +25,11 @@ final class SkyBackgroundViewModel: ObservableObject {
     }
     
     private func subscribeObjects() {
-        subscribeObjectForGauge(object: resource)
-        subscribeObjectForGauge(object: progress)
+        subscribeObjectForBackground(object: resource)
+        subscribeObjectForBackground(object: progress)
     }
     
-    private func subscribeObjectForGauge<O: ObservableObject & Gaugeable>(object: O) {
+    private func subscribeObjectForBackground<O: ObservableObject & Gaugeable>(object: O) {
         object.objectWillChange
             .receive(on: DispatchQueue.main)
             .map { _ in object.getPercentage() }
@@ -41,12 +41,12 @@ final class SkyBackgroundViewModel: ObservableObject {
     }
     
     private func updateRGB(object: Gaugeable) {
-        guard let gauge = taskManager.getCurrentTask()?.gauge,
-              gauge.sourceType == type(of: object) else {
+        guard let progress = taskManager.getCurrentTask()?.progress,
+              progress.gaugeType == type(of: object) else {
             return
         }
-        let startingRGB = gauge.startingBackgroundRGB
-        let endingRGB = gauge.endingBackgroundRGB
+        let startingRGB = progress.startingBackgroundRGB
+        let endingRGB = progress.endingBackgroundRGB
         let factor = object.getRate()
         rgb = (
             getCalculatedValue(starting: startingRGB.0, ending: endingRGB.0, factor: factor),

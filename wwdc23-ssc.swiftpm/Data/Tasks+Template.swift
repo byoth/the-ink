@@ -28,6 +28,7 @@ extension TaskSection {
     
     static let MakeProducts = TaskSection(
         title: "3. MAKE PRODUCTS",
+        isSketchable: false,
         tasks: [
             Task.AirPollution,
             Task.WaterPollution,
@@ -54,9 +55,10 @@ extension Task {
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
-        gauge: TaskGauge(
+        progress: TaskProgress(
             title: "INK GAUGE",
-            sourceType: SketchingResource.self,
+            layerTypes: [.background, .foreground],
+            gaugeType: SketchingResource.self,
             startingBackgroundRGB: SkyRGB.first,
             endingBackgroundRGB: SkyRGB.second
         )
@@ -64,9 +66,10 @@ extension Task {
     
     static let MakeConstructionSite = Task(
         title: "Make a construction site",
-        gauge: TaskGauge(
+        progress: TaskProgress(
             title: "BUILD RATE",
-            sourceType: SketchingProgress.self,
+            layerTypes: [.background, .constructionSiteGuideline, .foreground],
+            gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.second,
             endingBackgroundRGB: SkyRGB.third
         )
@@ -74,9 +77,10 @@ extension Task {
     
     static let BuildFactory = Task(
         title: "Build a factory",
-        gauge: TaskGauge(
+        progress: TaskProgress(
             title: "BUILD RATE",
-            sourceType: SketchingProgress.self,
+            layerTypes: [.background, .factoryGuideline, .foreground],
+            gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth
         )
@@ -94,9 +98,10 @@ extension Task {
     
     static let MakeProducts = Task(
         title: "Make products",
-        gauge: TaskGauge(
+        progress: TaskProgress(
             title: "PRODUCTION RATE",
-            sourceType: SketchingProgress.self,
+            layerTypes: [.background, .foreground],
+            gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.fourth,
             endingBackgroundRGB: SkyRGB.fifth
         )

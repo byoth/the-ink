@@ -34,7 +34,10 @@ final class CanvasViewModel: ObservableObject {
     
     private func subscribeObjects() {
         Publishers
-            .Merge(toolPicker.objectWillChange, resource.objectWillChange)
+            .Merge(
+                toolPicker.objectWillChange,
+                taskManager.objectWillChange
+            )
             .sink { [weak self] in
                 self?.objectWillChange.send()
             }
@@ -66,7 +69,7 @@ final class CanvasViewModel: ObservableObject {
             let accuracy = comparer.getAccuracy()
             DispatchQueue.main.async {
                 // TODO: factor 조정
-                self.progress.setAccuracy(accuracy * 2)
+                self.progress.setAccuracy(accuracy * 1.5)
             }
         }
     }
@@ -87,12 +90,13 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func getCurrentLayers() -> [CanvasLayer] {
-        // TODO: TaskManager 연동
-        allLayers
+        let layerTypes = taskManager.getCurrentTask()?.progress?.layerTypes ?? []
+        return allLayers
+            .filter { layerTypes.contains($0.type) }
     }
     
     func isCanvasBlocked() -> Bool {
-        !isErasing() && resource.isEmpty()
+        (!isErasing() && resource.isEmpty()) || !taskManager.isSketchable()
     }
     
     private func isErasing() -> Bool {

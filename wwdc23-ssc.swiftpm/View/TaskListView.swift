@@ -38,6 +38,12 @@ struct TaskListView: View {
                 )
             }
         }
+        .onAppear {
+            // TODO: 대신 Script 연동
+            DispatchQueue.main.async {
+                self.viewModel.taskManager.gotoNextTask()
+            }
+        }
     }
     
     private func lockedView() -> some View {
@@ -62,15 +68,15 @@ struct TaskListView: View {
                     ProgressView()
                 }
             }
-            if let gauge = task.gauge, isActive {
-                gaugeView(gauge: gauge)
+            if let progress = task.progress, isActive {
+                progressView(progress: progress)
             }
         }
     }
     
-    private func gaugeView(gauge: TaskGauge) -> some View {
+    private func progressView(progress: TaskProgress) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(gauge.title)
+            Text(progress.title)
                 .foregroundColor(.gray)
                 .font(.caption)
             GeometryReader { geometry in
