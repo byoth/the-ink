@@ -19,6 +19,6 @@ final class SketchingProgress: ObservableObject, Gaugeable {
     }
     
     func getRate() -> CGFloat {
-        accuracy.isNaN ? 0 : accuracy
+        accuracy.isNormal ? accuracy : 0
     }
 }

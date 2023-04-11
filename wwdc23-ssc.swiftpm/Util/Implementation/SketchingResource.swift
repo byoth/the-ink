@@ -26,6 +26,6 @@ final class SketchingResource: ObservableObject, Gaugeable {
     
     func getRate() -> CGFloat {
         let rate = CGFloat(amount) / CGFloat(maxAmount)
-        return rate.isNaN ? 0 : rate
+        return rate.isNormal ? rate : 0
     }
 }
