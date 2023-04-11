@@ -18,7 +18,11 @@ final class CanvasLayer {
     }
     
     func getTemplateDrawing() -> Drawing {
-        type.templateDrawing
+        type.getTemplateDrawing()
+    }
+    
+    func isGuideline() -> Bool {
+        type.isGuideline()
     }
 }
 

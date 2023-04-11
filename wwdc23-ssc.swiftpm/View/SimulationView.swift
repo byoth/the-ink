@@ -60,6 +60,7 @@ struct SimulationView: View {
     
     private func canvasView() -> some View {
         CanvasView(
+            allLayers: viewModel.allLayers,
             resource: viewModel.resource,
             progress: viewModel.progress,
             taskManager: viewModel.taskManager
@@ -81,14 +82,6 @@ struct SimulationView: View {
                 isSideHidden = false
             }
         }
-    }
-}
-
-private extension SimulationView {
-    struct AnimationState: Equatable {
-        let isBackgroundHidden: Bool
-        let isCanvasHidden: Bool
-        let isSideHidden: Bool
     }
 }
 

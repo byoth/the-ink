@@ -10,14 +10,14 @@ import PencilKit
 
 struct DrawingComparer {
     let drawing: PKDrawing
-    let templateDrawing: PKDrawing
+    let guidelineDrawing: PKDrawing
     let size: CGSize
     let scale: CGFloat = 1
     
     func getAccuracy() -> CGFloat {
         let rect = CGRect(origin: .zero, size: size)
         let image = drawing.image(from: rect, scale: scale)
-        let templateImage = templateDrawing.image(from: rect, scale: scale)
-        return image.getAccuracy(to: templateImage)
+        let guidelineImage = guidelineDrawing.image(from: rect, scale: scale)
+        return image.getAccuracy(to: guidelineImage)
     }
 }

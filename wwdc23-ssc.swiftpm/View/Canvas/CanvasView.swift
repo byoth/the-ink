@@ -11,10 +11,12 @@ struct CanvasView: View {
     @ObservedObject private var viewModel: CanvasViewModel
     @State private var receiver: CanvasSketchingReceiver
     
-    init(resource: SketchingResource,
+    init(allLayers: [CanvasLayer],
+         resource: SketchingResource,
          progress: SketchingProgress,
          taskManager: TaskManager) {
         let viewModel = CanvasViewModel(
+            allLayers: allLayers,
             resource: resource,
             progress: progress,
             taskManager: taskManager
@@ -28,7 +30,7 @@ struct CanvasView: View {
             ZStack(alignment: .bottomTrailing) {
                 ZStack(alignment: .topLeading) {
                     Color.white
-                    layersView()
+                    layersView(layers: viewModel.getCurrentLayers())
                     ForEach(viewModel.animals) { animal in
                         FleeingAnimalView(animal: animal)
                     }
@@ -44,11 +46,11 @@ struct CanvasView: View {
         .aspectRatio(1 / 1, contentMode: .fit)
     }
     
-    private func layersView() -> some View {
-        ForEach(Array(zip(viewModel.layers.indices, viewModel.layers)), id: \.1) { index, layer in
+    private func layersView(layers: [CanvasLayer]) -> some View {
+        ForEach(Array(zip(layers.indices, layers)), id: \.1) { index, layer in
             CanvasLayerView(
                 layer: layer,
-                receiver: index == viewModel.layers.count - 1 ? receiver : nil
+                receiver: index == layers.count - 1 ? receiver : nil
             )
         }
     }
@@ -60,14 +62,20 @@ struct CanvasView: View {
                 viewModel.guideUserToGetResource()
             }
     }
+    
+    private static func getLayers(layerTypes: [CanvasLayerType]) -> [CanvasLayer] {
+        layerTypes.map { CanvasLayer(type: $0) }
+    }
 }
 
 struct CanvasView_Previews: PreviewProvider {
     static var previews: some View {
+        let allLayers = [CanvasLayer]()
         let resource = SketchingResource()
         let progress = SketchingProgress()
         let taskManager = TaskManager()
         return CanvasView(
+            allLayers: allLayers,
             resource: resource,
             progress: progress,
             taskManager: taskManager

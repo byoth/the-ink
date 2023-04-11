@@ -9,20 +9,22 @@ import Combine
 import PencilKit
 
 final class CanvasViewModel: ObservableObject {
-    @Published var layers: [CanvasLayer]
-    @Published var animals: [FleeingAnimal] = []
+    let allLayers: [CanvasLayer]
     let toolPicker: ToolPicker
     let resource: SketchingResource
     let progress: SketchingProgress
     let taskManager: TaskManager
     private var cancellables = Set<AnyCancellable>()
     
-    init(layerTypes: [CanvasLayerType] = [.background, .factoryGuideline, .foreground],
+    // TODO: class 분리
+    @Published var animals: [FleeingAnimal] = []
+    
+    init(allLayers: [CanvasLayer],
          toolPicker: ToolPicker = .shared,
          resource: SketchingResource,
          progress: SketchingProgress,
          taskManager: TaskManager) {
-        self.layers = layerTypes.map { CanvasLayer(type: $0) }
+        self.allLayers = allLayers
         self.toolPicker = toolPicker
         self.resource = resource
         self.progress = progress
@@ -49,20 +51,22 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func updateProgress(canvasView: PKCanvasView) {
-        guard let drawing = layers[safe: layers.count - 2]?.pkDrawing,
-              let templateDrawing = layers.last?.pkDrawing else {
+        let layers = getCurrentLayers()
+        guard let drawing = layers.last?.pkDrawing,
+              let guidelineDrawing = layers.last(where: { $0.isGuideline() })?.pkDrawing else {
             return
         }
         let size = canvasView.bounds.size
         DispatchQueue.global(qos: .userInteractive).async {
             let comparer = DrawingComparer(
                 drawing: drawing,
-                templateDrawing: templateDrawing,
+                guidelineDrawing: guidelineDrawing,
                 size: size
             )
             let accuracy = comparer.getAccuracy()
             DispatchQueue.main.async {
-                self.progress.setAccuracy(accuracy * 1.1)
+                // TODO: factor 조정
+                self.progress.setAccuracy(accuracy * 2)
             }
         }
     }
@@ -80,6 +84,11 @@ final class CanvasViewModel: ObservableObject {
     
     func guideUserToGetResource() {
         // TODO: Toast or Script
+    }
+    
+    func getCurrentLayers() -> [CanvasLayer] {
+        // TODO: TaskManager 연동
+        allLayers
     }
     
     func isCanvasBlocked() -> Bool {

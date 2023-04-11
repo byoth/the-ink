@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum CanvasLayerType: String {
+enum CanvasLayerType: String, CaseIterable {
     case background
     case factoryGuideline
     case foreground
     
-    var templateDrawing: Drawing {
+    func getTemplateDrawing() -> Drawing {
         switch self {
         case .background:
             return .background
@@ -20,6 +20,15 @@ enum CanvasLayerType: String {
             return .factoryGuideline
         case .foreground:
             return .foreground
+        }
+    }
+    
+    func isGuideline() -> Bool {
+        switch self {
+        case .factoryGuideline:
+            return true
+        default:
+            return false
         }
     }
 }
