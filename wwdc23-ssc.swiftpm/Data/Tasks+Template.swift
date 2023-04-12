@@ -28,7 +28,6 @@ extension TaskSection {
     
     static let MakeProducts = TaskSection(
         title: "3. MAKE PRODUCTS",
-        isSketchable: false,
         tasks: [
             Task.AirPollution,
             Task.WaterPollution,
@@ -57,7 +56,7 @@ extension Task {
         title: "Fill the ink gauge",
         progress: TaskProgress(
             title: "INK GAUGE",
-            layerTypes: [.foreground],
+            layerTypes: [.forFactory],
             gaugeType: SketchingResource.self,
             startingBackgroundRGB: SkyRGB.first,
             endingBackgroundRGB: SkyRGB.second
@@ -68,7 +67,7 @@ extension Task {
         title: "Make a construction site",
         progress: TaskProgress(
             title: "BUILD RATE",
-            layerTypes: [.constructionSiteGuideline, .foreground],
+            layerTypes: [.constructionSiteGuideline, .forFactory],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.second,
             endingBackgroundRGB: SkyRGB.third
@@ -79,7 +78,7 @@ extension Task {
         title: "Build a factory",
         progress: TaskProgress(
             title: "BUILD RATE",
-            layerTypes: [.factoryGuideline, .foreground],
+            layerTypes: [.factoryGuideline, .forFactory],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth
@@ -100,7 +99,7 @@ extension Task {
         title: "Make products",
         progress: TaskProgress(
             title: "PRODUCTION RATE",
-            layerTypes: [.foreground],
+            layerTypes: [.forFactory, .pollutionGuideline, .forPollution],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.fourth,
             endingBackgroundRGB: SkyRGB.fifth

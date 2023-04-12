@@ -96,7 +96,7 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func isCanvasBlocked() -> Bool {
-        (!isErasing() && resource.isEmpty()) || !taskManager.isSketchable()
+        !isErasing() && resource.isEmpty()
     }
     
     private func isErasing() -> Bool {

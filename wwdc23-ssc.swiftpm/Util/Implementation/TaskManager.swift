@@ -61,10 +61,6 @@ final class TaskManager: ObservableObject {
         currentSectionIndex * 10 + currentTaskIndex
     }
     
-    func isSketchable() -> Bool {
-        currentSectionIndex < sections.count - 1
-    }
-    
     func canBeAnimalFleeing() -> Bool {
         currentSectionIndex == 0
     }

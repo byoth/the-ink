@@ -8,27 +8,30 @@
 import Foundation
 
 enum CanvasLayerType: String, CaseIterable {
-    case background
     case constructionSiteGuideline
     case factoryGuideline
-    case foreground
+    case pollutionGuideline
+    case forFactory
+    case forPollution
     
     func getTemplateDrawing() -> Drawing {
         switch self {
-        case .background:
-            return .background
         case .constructionSiteGuideline:
             return .constructionSiteGuideline
         case .factoryGuideline:
             return .factoryGuideline
-        case .foreground:
-            return .foreground
+        case .pollutionGuideline:
+            return .pollutionGuideline
+        case .forFactory:
+            return .nature
+        case .forPollution:
+            return .empty
         }
     }
     
     func isGuideline() -> Bool {
         switch self {
-        case .constructionSiteGuideline, .factoryGuideline:
+        case .constructionSiteGuideline, .factoryGuideline, .pollutionGuideline:
             return true
         default:
             return false
