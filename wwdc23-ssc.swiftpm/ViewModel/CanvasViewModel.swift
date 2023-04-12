@@ -69,7 +69,7 @@ final class CanvasViewModel: ObservableObject {
             let accuracy = comparer.getAccuracy()
             DispatchQueue.main.async {
                 // TODO: factor 조정
-                self.progress.setAccuracy(accuracy * 1.5)
+                self.progress.setAccuracy(accuracy * 3)
             }
         }
     }

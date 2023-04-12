@@ -21,7 +21,6 @@ extension TaskSection {
     static let BuildFactory = TaskSection(
         title: "2. BUILD A FACTORY",
         tasks: [
-            Task.MakeConstructionSite,
             Task.BuildFactory
         ]
     )
