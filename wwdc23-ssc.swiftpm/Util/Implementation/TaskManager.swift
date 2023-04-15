@@ -9,10 +9,10 @@ import Foundation
 
 final class TaskManager: ObservableObject {
     let sections: [TaskSection]
-    @Published private var currentSectionIndex = -1
-    @Published private var currentTaskIndex = -1
+    @Published private var currentSectionIndex = 0
+    @Published private var currentTaskIndex = 0
     
-    init(sections: [TaskSection] = [.GetResources, .BuildFactory, .MakeProducts]) {
+    init(sections: [TaskSection] = [.Introduction, .GetResources, .BuildFactory, .MakeProducts]) {
         self.sections = sections
     }
     
@@ -24,7 +24,7 @@ final class TaskManager: ObservableObject {
             currentSectionIndex += 1
             currentTaskIndex = 0
         }
-        if getCurrentTask()?.isSkippable == true {
+        if getCurrentTask()?.isSkippable() == true {
             gotoNextTask()
         }
     }

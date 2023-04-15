@@ -9,15 +9,19 @@ import Foundation
 
 struct Task {
     let title: String
-    let isSkippable: Bool
+    let scripts: [String]
     let progress: TaskProgress?
     
     init(title: String,
-         isSkippable: Bool = false,
+         scripts: [String] = [],
          progress: TaskProgress? = nil) {
         self.title = title
-        self.isSkippable = isSkippable
+        self.scripts = scripts
         self.progress = progress
+    }
+    
+    func isSkippable() -> Bool {
+        scripts.isEmpty && progress == nil
     }
 }
 

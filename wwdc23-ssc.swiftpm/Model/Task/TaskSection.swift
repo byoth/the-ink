@@ -9,11 +9,17 @@ import Foundation
 
 struct TaskSection {
     let title: String
+    let isShownInList: Bool
+    let isSketchable: Bool
     var tasks: [Task]
     
     init(title: String,
+         isShownInList: Bool = true,
+         isSketchable: Bool = true,
          tasks: [Task]) {
         self.title = title
+        self.isShownInList = isShownInList
+        self.isSketchable = isSketchable
         self.tasks = tasks
     }
 }

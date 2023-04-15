@@ -8,6 +8,15 @@
 import Foundation
 
 extension TaskSection {
+    static let Introduction = TaskSection(
+        title: "0. INTRODUCTION",
+        isShownInList: false,
+        isSketchable: false,
+        tasks: [
+            Task.Introduction
+        ]
+    )
+    
     static let GetResources = TaskSection(
         title: "1. GET RESOURCES",
         tasks: [
@@ -36,19 +45,24 @@ extension TaskSection {
 }
 
 extension Task {
+    static let Introduction = Task(
+        title: "Introduction",
+        scripts: [
+            "Hello, Player!",
+            "We gonna do blahblah. blahblahblah. blahblah. blahblahblah."
+        ]
+    )
+    
     static let RemoveForest = Task(
-        title: "Remove the forest",
-        isSkippable: true
+        title: "Remove the forest"
     )
     
     static let RemovePond = Task(
-        title: "Remove the pond",
-        isSkippable: true
+        title: "Remove the pond"
     )
     
     static let RemoveRocks = Task(
-        title: "Remove the rocks",
-        isSkippable: true
+        title: "Remove the rocks"
     )
     
     static let FillInkGauge = Task(
@@ -85,13 +99,11 @@ extension Task {
     )
     
     static let AirPollution = Task(
-        title: "Air Pollution",
-        isSkippable: true
+        title: "Air Pollution"
     )
     
     static let WaterPollution = Task(
-        title: "Water Pollution",
-        isSkippable: true
+        title: "Water Pollution"
     )
     
     static let MakeProducts = Task(

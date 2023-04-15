@@ -75,13 +75,14 @@ final class TaskListViewModel: ObservableObject {
     
     func isCompleted(section: TaskSection, task: Task) -> Bool {
         let isSectionCompleted = taskManager.isCompleted(section: section)
-        let isTaskCompleted = (!task.isSkippable && taskManager.isCompleted(task: task))
+        let isTaskCompleted = (!task.isSkippable() && taskManager.isCompleted(task: task))
         let isProgressCompleted = taskManager.getCurrentTask() == task && currentProgressRate >= 1
         return isSectionCompleted || isTaskCompleted || isProgressCompleted
     }
     
     func getSections() -> [TaskSection] {
         taskManager.getSections()
+            .filter { $0.isShownInList }
     }
     
     func getCurrentStepHashValue() -> Int {

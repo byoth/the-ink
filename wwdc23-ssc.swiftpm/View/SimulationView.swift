@@ -27,11 +27,6 @@ struct SimulationView: View {
         }
         .onAppear {
             animateToAppear()
-            
-            // TODO: 대신 Script 연동
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                self.viewModel.taskManager.gotoNextTask()
-            }
         }
     }
     
@@ -50,10 +45,9 @@ struct SimulationView: View {
             Color.white
                 .opacity(0.1)
                 .ignoresSafeArea()
-            VStack {
-                ScriptView(text: "Hello, world!")
-                    .frame(height: 160)
-                    .padding()
+            VStack(spacing: 0) {
+                ScriptView(taskManager: viewModel.taskManager)
+                    .frame(height: 200)
                 TaskListView(
                     taskManager: viewModel.taskManager,
                     resource: viewModel.resource,
@@ -84,7 +78,7 @@ struct SimulationView: View {
         withAnimation(.easeInOut(duration: 1).delay(1)) {
             isCanvasHidden = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
             withAnimation(.spring()) {
                 isSideHidden = false
             }
