@@ -28,13 +28,13 @@ struct FleeingAnimalView: View {
                 .frame(width: Self.sizeLength, height: Self.sizeLength)
                 .offset(y: isJumping ? -animal.jumpingY : 0)
         }
+        .transformEffect(CGAffineTransform(translationX: -Self.sizeLength / 2, y: -Self.sizeLength / 2))
         .allowsHitTesting(false)
         .rotation3DEffect(.degrees(getXDegrees()), axis: (x: 0, y: 1, z: 0))
         .offset(x: x, y: y)
-        .transformEffect(CGAffineTransform(translationX: -Self.sizeLength / 2, y: -Self.sizeLength / 2))
         .opacity(opacity)
         .onAppear {
-            withAnimation(.easeIn(duration: 1)) {
+            withAnimation(.easeIn(duration: animal.duration)) {
                 x += animal.movingOffset.x
                 y += animal.movingOffset.y
                 opacity = 0

@@ -36,7 +36,6 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasVie
             self.viewModel?.updateResource(canvasView: canvasView)
             self.viewModel?.updateProgress(canvasView: canvasView)
         }
-        printDrawing(canvasView: canvasView)
     }
     
     private func printDrawing(canvasView: PKCanvasView) {

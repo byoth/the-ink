@@ -15,12 +15,14 @@ struct CanvasView: View {
          resource: SketchingResource,
          progress: SketchingProgress,
          taskManager: TaskManager,
-         receiver: CanvasSketchingReceiver) {
+         receiver: CanvasSketchingReceiver,
+         isIntroduction: Bool = false) {
         self.viewModel = CanvasViewModel(
             allLayers: allLayers,
             resource: resource,
             progress: progress,
-            taskManager: taskManager
+            taskManager: taskManager,
+            isIntroduction: isIntroduction
         )
         self.receiver = receiver
         receiver.viewModel = viewModel
@@ -32,8 +34,11 @@ struct CanvasView: View {
                 ZStack(alignment: .topLeading) {
                     backgroundView()
                     layersView(layers: viewModel.getCurrentLayers())
-                    ForEach(viewModel.animals) { animal in
+                    ForEach(viewModel.fleeingAnimals) { animal in
                         FleeingAnimalView(animal: animal)
+                    }
+                    ForEach(viewModel.flyingAnimals) { animal in
+                        FlyingAnimalView(animal: animal, canvasSize: geometry.size)
                     }
                     if viewModel.isCanvasBlocked() {
                         blockingView()

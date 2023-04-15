@@ -29,7 +29,7 @@ struct SimulationView: View {
             animateToAppear()
             
             // TODO: 대신 Script 연동
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 self.viewModel.taskManager.gotoNextTask()
             }
         }
@@ -69,7 +69,8 @@ struct SimulationView: View {
             resource: viewModel.resource,
             progress: viewModel.progress,
             taskManager: viewModel.taskManager,
-            receiver: viewModel.receiver
+            receiver: viewModel.receiver,
+            isIntroduction: !isCanvasHidden && isSideHidden
         )
         .opacity(isCanvasHidden ? 0 : 1)
         .offset(y: isCanvasHidden ? 100 : 0)
@@ -83,7 +84,7 @@ struct SimulationView: View {
         withAnimation(.easeInOut(duration: 1).delay(1)) {
             isCanvasHidden = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             withAnimation(.spring()) {
                 isSideHidden = false
             }

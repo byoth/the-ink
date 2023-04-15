@@ -14,22 +14,25 @@ final class CanvasViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     let taskManager: TaskManager
+    @Published var fleeingAnimals: [FleeingAnimal] = []
+    @Published var flyingAnimals: [FlyingAnimal] = []
     private var cancellables = Set<AnyCancellable>()
-    
-    // TODO: class 분리
-    @Published var animals: [FleeingAnimal] = []
     
     init(allLayers: [CanvasLayer],
          toolPicker: ToolPicker = .shared,
          resource: SketchingResource,
          progress: SketchingProgress,
-         taskManager: TaskManager) {
+         taskManager: TaskManager,
+         isIntroduction: Bool = false) {
         self.allLayers = allLayers
         self.toolPicker = toolPicker
         self.resource = resource
         self.progress = progress
         self.taskManager = taskManager
         subscribeObjects()
+        if isIntroduction {
+            showPeacefulEffect()
+        }
     }
     
     private func subscribeObjects() {
@@ -42,6 +45,17 @@ final class CanvasViewModel: ObservableObject {
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
+    }
+    
+    private func showPeacefulEffect() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { [weak self] timer in
+                self?.appendFlyingAnimal()
+                if self?.flyingAnimals.count == 3 {
+                    timer.invalidate()
+                }
+            }
+        }
     }
     
     func updateResource(canvasView: InheritedPKCanvasView) {
@@ -79,9 +93,17 @@ final class CanvasViewModel: ObservableObject {
             return
         }
         let animal = FleeingAnimal(origin: origin)
-        animals.append(animal)
+        fleeingAnimals.append(animal)
         DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
-            self.animals.removeAll { $0 === animal }
+            self.fleeingAnimals.removeAll { $0 === animal }
+        }
+    }
+    
+    func appendFlyingAnimal() {
+        let animal = FlyingAnimal()
+        flyingAnimals.append(animal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
+            self.flyingAnimals.removeAll { $0 === animal }
         }
     }
     
