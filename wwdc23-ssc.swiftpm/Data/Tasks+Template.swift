@@ -45,6 +45,7 @@ extension TaskSection {
 extension Task {
     static let Introduction = Task(
         title: "Introduction",
+        layers: [.forFactory],
         scripts: [
             "Hello, Player!",
             "We gonna do blahblah. blahblahblah. blahblah. blahblahblah."
@@ -65,12 +66,12 @@ extension Task {
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
+        layers: [.forFactory],
         scripts: [
             "Fill the ink gauge~"
         ],
         progress: TaskProgress(
             title: "INK GAUGE",
-            layerTypes: [.forFactory],
             gaugeType: SketchingResource.self,
             startingBackgroundRGB: SkyRGB.first,
             endingBackgroundRGB: SkyRGB.second
@@ -79,9 +80,9 @@ extension Task {
     
     static let BuildFactory = Task(
         title: "Build a factory",
+        layers: [.factoryGuideline, .forFactory],
         progress: TaskProgress(
             title: "BUILD RATE",
-            layerTypes: [.factoryGuideline, .forFactory],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.second,
             endingBackgroundRGB: SkyRGB.third
@@ -90,9 +91,9 @@ extension Task {
     
     static let MakeProducts = Task(
         title: "Make products",
+        layers: [.forFactory, .pollutionGuideline, .forPollution],
         progress: TaskProgress(
             title: "PRODUCTION RATE",
-            layerTypes: [.forFactory, .pollutionGuideline, .forPollution],
             gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth

@@ -14,6 +14,7 @@ final class CanvasViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     let taskManager: TaskManager
+    @Published var layers: [CanvasLayerType] = []
     @Published var fleeingAnimals: [FleeingAnimal] = []
     @Published var flyingAnimals: [FlyingAnimal] = []
     private var cancellables = Set<AnyCancellable>()
@@ -36,13 +37,17 @@ final class CanvasViewModel: ObservableObject {
     }
     
     private func subscribeObjects() {
-        Publishers
-            .Merge(
-                toolPicker.objectWillChange,
-                taskManager.objectWillChange
-            )
+        toolPicker.objectWillChange
             .sink { [weak self] in
                 self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+        
+        taskManager.objectWillChange
+            .map { self.taskManager.getCurrentTask()?.layers ?? [] }
+            .filter { !$0.isEmpty }
+            .sink { [weak self] in
+                self?.layers = $0
             }
             .store(in: &cancellables)
     }
@@ -112,13 +117,16 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func getCurrentLayers() -> [CanvasLayer] {
-        let layerTypes = taskManager.getCurrentTask()?.progress?.layerTypes ?? []
-        return allLayers
-            .filter { layerTypes.contains($0.type) }
+        let layers = taskManager.getCurrentTask()?.layers ?? []
+        return allLayers.filter { layers.contains($0.type) }
     }
     
     func isCanvasBlocked() -> Bool {
-        !isErasing() && resource.isEmpty()
+        !isSketchable() || (!isErasing() && resource.isEmpty())
+    }
+    
+    func isSketchable() -> Bool {
+        taskManager.getCurrentSection()?.isSketchable == true
     }
     
     private func isErasing() -> Bool {

@@ -9,13 +9,16 @@ import Foundation
 
 struct Task {
     let title: String
+    let layers: [CanvasLayerType]
     let scripts: [String]
     let progress: TaskProgress?
     
     init(title: String,
+         layers: [CanvasLayerType] = [],
          scripts: [String] = [],
          progress: TaskProgress? = nil) {
         self.title = title
+        self.layers = layers
         self.scripts = scripts
         self.progress = progress
     }

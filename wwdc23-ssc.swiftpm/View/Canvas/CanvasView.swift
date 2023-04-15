@@ -60,9 +60,11 @@ struct CanvasView: View {
     
     private func layersView(layers: [CanvasLayer]) -> some View {
         ForEach(Array(zip(layers.indices, layers)), id: \.1) { index, layer in
-            CanvasLayerView(
+            let isLast = index == layers.count - 1
+            return CanvasLayerView(
                 layer: layer,
-                receiver: index == layers.count - 1 ? receiver : nil
+                receiver: isLast ? receiver : nil,
+                isSketchable: isLast
             )
         }
         .transition(.opacity.animation(.easeOut(duration: 0.5)))

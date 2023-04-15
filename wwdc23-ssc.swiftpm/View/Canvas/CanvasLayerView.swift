@@ -11,15 +11,18 @@ struct CanvasLayerView: View {
     private weak var layer: CanvasLayer?
     private weak var toolPicker: ToolPicker?
     private weak var receiver: CanvasSketchingReceiver?
+    let isSketchable: Bool
     @State private var canvasView = InheritedPKCanvasView()
     
     init(layer: CanvasLayer? = nil,
          toolPicker: ToolPicker? = .shared,
-         receiver: CanvasSketchingReceiver? = nil) {
+         receiver: CanvasSketchingReceiver? = nil,
+         isSketchable: Bool) {
         self.layer = layer
         self.toolPicker = toolPicker
         self.receiver = receiver
-        if isForeground() {
+        self.isSketchable = isSketchable
+        if isSketchable {
             setupSketching()
         }
     }
@@ -45,9 +48,5 @@ struct CanvasLayerView: View {
         }
         layer?.pkDrawing = drawing
         canvasView.setup(drawing: drawing)
-    }
-    
-    private func isForeground() -> Bool {
-        receiver != nil
     }
 }
