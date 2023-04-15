@@ -10,28 +10,54 @@ import Combine
 
 final class ScriptViewModel: ObservableObject {
     let taskManager: TaskManager
-    @Published var scripts: [String]
-    @Published var currentScriptIndex = 0
+    @Published private var scripts: [String]
+    @Published private var currentScriptIndex = 0
+    @Published var displayingScript: String = ""
     private var cancellables = Set<AnyCancellable>()
     
     init(taskManager: TaskManager) {
         self.taskManager = taskManager
         self.scripts = taskManager.getCurrentTask()?.scripts ?? []
         subscribeTaskScripts()
+        applyTypingAnimation()
     }
     
     private func subscribeTaskScripts() {
         taskManager.objectWillChange
             .receive(on: DispatchQueue.main)
             .map { self.taskManager.getCurrentTask()?.scripts ?? [] }
+            .removeDuplicates()
             .sink { [weak self] in
-                self?.scripts = $0
+                self?.setScripts($0)
             }
             .store(in: &cancellables)
     }
     
+    private func setScripts(_ scripts: [String]) {
+        self.scripts = scripts
+        displayingScript = ""
+        currentScriptIndex = 0
+    }
+    
+    private func applyTypingAnimation() {
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
+            self?.typeScript()
+        }
+    }
+    
+    private func typeScript() {
+        guard isTypingAnimation() else {
+            return
+        }
+        let nextIndex = displayingScript.count
+        displayingScript.append(getCurrentScript()[nextIndex])
+    }
+    
     func gotoNextScript() {
-        if hasNextScript() {
+        if isTypingAnimation() {
+            displayingScript = getCurrentScript()
+        } else if hasNextScript() {
+            displayingScript = ""
             currentScriptIndex += 1
         } else if canGotoNextTask() {
             taskManager.gotoNextTask()
@@ -44,6 +70,10 @@ final class ScriptViewModel: ObservableObject {
     
     func hasNext() -> Bool {
         hasNextScript() || canGotoNextTask()
+    }
+    
+    private func isTypingAnimation() -> Bool {
+        displayingScript != getCurrentScript()
     }
     
     private func hasNextScript() -> Bool {

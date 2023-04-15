@@ -27,19 +27,17 @@ extension TaskSection {
         ]
     )
     
-    static let BuildFactory = TaskSection(
-        title: "2. BUILD A FACTORY",
+    static let MakeProducts = TaskSection(
+        title: "2. MAKE PRODUCTS",
         tasks: [
-            Task.BuildFactory
+            Task.BuildFactory,
+            Task.MakeProducts
         ]
     )
     
-    static let MakeProducts = TaskSection(
-        title: "3. MAKE PRODUCTS",
+    static let TurnEverythingBack = TaskSection(
+        title: "3. TURN EVERYTHING BACK!",
         tasks: [
-            Task.AirPollution,
-            Task.WaterPollution,
-            Task.MakeProducts
         ]
     )
 }
@@ -67,6 +65,9 @@ extension Task {
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
+        scripts: [
+            "Fill the ink gauge~"
+        ],
         progress: TaskProgress(
             title: "INK GAUGE",
             layerTypes: [.forFactory],
@@ -76,34 +77,15 @@ extension Task {
         )
     )
     
-    static let MakeConstructionSite = Task(
-        title: "Make a construction site",
-        progress: TaskProgress(
-            title: "BUILD RATE",
-            layerTypes: [.constructionSiteGuideline, .forFactory],
-            gaugeType: SketchingProgress.self,
-            startingBackgroundRGB: SkyRGB.second,
-            endingBackgroundRGB: SkyRGB.third
-        )
-    )
-    
     static let BuildFactory = Task(
         title: "Build a factory",
         progress: TaskProgress(
             title: "BUILD RATE",
             layerTypes: [.factoryGuideline, .forFactory],
             gaugeType: SketchingProgress.self,
-            startingBackgroundRGB: SkyRGB.third,
-            endingBackgroundRGB: SkyRGB.fourth
+            startingBackgroundRGB: SkyRGB.second,
+            endingBackgroundRGB: SkyRGB.third
         )
-    )
-    
-    static let AirPollution = Task(
-        title: "Air Pollution"
-    )
-    
-    static let WaterPollution = Task(
-        title: "Water Pollution"
     )
     
     static let MakeProducts = Task(
@@ -112,8 +94,8 @@ extension Task {
             title: "PRODUCTION RATE",
             layerTypes: [.forFactory, .pollutionGuideline, .forPollution],
             gaugeType: SketchingProgress.self,
-            startingBackgroundRGB: SkyRGB.fourth,
-            endingBackgroundRGB: SkyRGB.fifth
+            startingBackgroundRGB: SkyRGB.third,
+            endingBackgroundRGB: SkyRGB.fourth
         )
     )
 }

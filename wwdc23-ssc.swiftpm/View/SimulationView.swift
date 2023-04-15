@@ -78,7 +78,7 @@ struct SimulationView: View {
         withAnimation(.easeInOut(duration: 1).delay(1)) {
             isCanvasHidden = false
         }
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             withAnimation(.spring()) {
                 isSideHidden = false
             }

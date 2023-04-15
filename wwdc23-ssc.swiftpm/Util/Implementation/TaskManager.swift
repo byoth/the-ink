@@ -12,7 +12,7 @@ final class TaskManager: ObservableObject {
     @Published private var currentSectionIndex = 0
     @Published private var currentTaskIndex = 0
     
-    init(sections: [TaskSection] = [.Introduction, .GetResources, .BuildFactory, .MakeProducts]) {
+    init(sections: [TaskSection] = [.Introduction, .GetResources, .MakeProducts, .TurnEverythingBack]) {
         self.sections = sections
     }
     

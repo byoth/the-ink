@@ -16,15 +16,17 @@ struct ScriptView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            Color.white
-                .opacity(0.01)
-            Text(viewModel.getCurrentScript())
-                .foregroundColor(.white)
-                .font(.headline)
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-            if viewModel.hasNext() {
-                BlinkingTriangle(sizeLength: 20, color: .white)
+        GeometryReader { geometry in
+            ZStack(alignment: .bottomTrailing) {
+                Color.white
+                    .opacity(0.01)
+                ScriptUIView(
+                    text: viewModel.displayingScript,
+                    width: geometry.size.width
+                )
+                if viewModel.hasNext() {
+                    BlinkingTriangle(sizeLength: 20, color: .white)
+                }
             }
         }
         .padding()

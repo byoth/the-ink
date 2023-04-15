@@ -8,20 +8,18 @@
 import SwiftUI
 
 struct CanvasUIView: UIViewRepresentable {
-    typealias UIViewType = InheritedPKCanvasView
-    
-    @Binding var canvasView: UIViewType
+    @Binding var canvasView: InheritedPKCanvasView
     weak var receiver: CanvasSketchingReceiver?
     
     // TODO: init with @Binding
     
-    func makeUIView(context: Context) -> UIViewType {
+    func makeUIView(context: Context) -> InheritedPKCanvasView {
         canvasView.delegate = receiver
         canvasView.receiver = receiver
         canvasView.backgroundColor = .clear
         return canvasView
     }
     
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    func updateUIView(_ uiView: InheritedPKCanvasView, context: Context) {
     }
 }
