@@ -20,9 +20,9 @@ extension TaskSection {
     static let GetResources = TaskSection(
         title: "1. GET RESOURCES",
         tasks: [
-            Task.RemoveForest,
+            Task.RemoveTrees,
             Task.RemovePond,
-            Task.RemoveRocks,
+            Task.RemoveSandyBeach,
             Task.FillInkGauge
         ]
     )
@@ -38,6 +38,8 @@ extension TaskSection {
     static let TurnEverythingBack = TaskSection(
         title: "3. TURN EVERYTHING BACK!",
         tasks: [
+            Task.RemovePollution,
+            Task.RemoveFactory
         ]
     )
 }
@@ -52,27 +54,27 @@ extension Task {
         ]
     )
     
-    static let RemoveForest = Task(
-        title: "Remove the forest"
+    static let RemoveTrees = Task(
+        title: "Remove the trees"
     )
     
     static let RemovePond = Task(
         title: "Remove the pond"
     )
     
-    static let RemoveRocks = Task(
-        title: "Remove the rocks"
+    static let RemoveSandyBeach = Task(
+        title: "Remove the sandy beach"
     )
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
-        layers: [.forFactory],
+        layers: [.emptyGuideline, .forFactory],
         scripts: [
             "Fill the ink gauge~"
         ],
         progress: TaskProgress(
             title: "INK GAUGE",
-            gaugeType: SketchingResource.self,
+            gaugeType: SketchingProgress.self,
             startingBackgroundRGB: SkyRGB.first,
             endingBackgroundRGB: SkyRGB.second
         )
@@ -98,5 +100,32 @@ extension Task {
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth
         )
+    )
+    
+    static let RemovePollution = Task(
+        title: "Remove Pollution",
+        layers: [.forFactory, .emptyGuideline, .forPollution],
+        progress: TaskProgress(
+            title: "RECOVERING RATE",
+            gaugeType: SketchingProgress.self,
+            startingBackgroundRGB: SkyRGB.fourth,
+            endingBackgroundRGB: SkyRGB.third
+        )
+    )
+    
+    static let RemoveFactory = Task(
+        title: "Remove Factory",
+        layers: [.forPollution, .emptyGuideline, .forFactory],
+        progress: TaskProgress(
+            title: "RECOVERING RATE",
+            gaugeType: SketchingProgress.self,
+            startingBackgroundRGB: SkyRGB.third,
+            endingBackgroundRGB: SkyRGB.second
+        )
+    )
+    
+    static let RecoverNature = Task(
+        title: "Recover Nature",
+        layers: [.emptyGuideline, .forFactory]
     )
 }
