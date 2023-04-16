@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CanvasView: View {
     @ObservedObject private var viewModel: CanvasViewModel
-    weak var receiver: CanvasSketchingReceiver?
     
     init(allLayers: [CanvasLayer],
          resource: SketchingResource,
@@ -22,18 +21,18 @@ struct CanvasView: View {
             resource: resource,
             progress: progress,
             taskManager: taskManager,
+            receiver: receiver,
             isIntroduction: isIntroduction
         )
-        self.receiver = receiver
-        receiver.viewModel = viewModel
     }
     
     var body: some View {
         GeometryReader { geometry in
+            let layers = viewModel.getCurrentLayers()
             ZStack(alignment: .bottomTrailing) {
                 ZStack(alignment: .topLeading) {
                     backgroundView()
-                    layersView(layers: viewModel.getCurrentLayers())
+                    layersView(layers: layers)
                     ForEach(viewModel.fleeingAnimals) { animal in
                         FleeingAnimalView(animal: animal)
                     }
@@ -47,6 +46,11 @@ struct CanvasView: View {
                 .cornerRadius(24)
                 .shadow(radius: 16, y: 8)
                 ResourceGaugeView(resource: viewModel.resource)
+            }
+            .onChange(of: layers) { _ in
+                DispatchQueue.main.async {
+                    viewModel.receiver.canvasViewLayersDidChange(size: geometry.size)
+                }
             }
         }
         .aspectRatio(1 / 1, contentMode: .fit)
@@ -63,7 +67,8 @@ struct CanvasView: View {
             let isLast = index == layers.count - 1
             return CanvasLayerView(
                 layer: layer,
-                receiver: isLast ? receiver : nil,
+                toolPicker: isLast ? viewModel.toolPicker : nil,
+                receiver: isLast ? viewModel.receiver : nil,
                 isSketchable: isLast
             )
         }

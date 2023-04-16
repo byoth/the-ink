@@ -14,6 +14,7 @@ final class CanvasViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     let taskManager: TaskManager
+    let receiver: CanvasSketchingReceiver
     private var calculator: SketchingCalculator?
     @Published var fleeingAnimals: [FleeingAnimal] = []
     @Published var flyingAnimals: [FlyingAnimal] = []
@@ -24,12 +25,15 @@ final class CanvasViewModel: ObservableObject {
          resource: SketchingResource,
          progress: SketchingProgress,
          taskManager: TaskManager,
+         receiver: CanvasSketchingReceiver,
          isIntroduction: Bool = false) {
         self.allLayers = allLayers
         self.toolPicker = toolPicker
         self.resource = resource
         self.progress = progress
         self.taskManager = taskManager
+        self.receiver = receiver
+        receiver.viewModel = self
         subscribeObjects()
         if isIntroduction {
             showPeacefulEffect()
@@ -73,14 +77,14 @@ final class CanvasViewModel: ObservableObject {
         }
     }
     
-    func calculateSketching(canvasView: PKCanvasView) {
+    func calculateSketching(size: CGSize) {
         let layers = getCurrentLayers()
         guard let sketchedDrawing = layers.last?.pkDrawing,
               let guidelineDrawing = layers.last(where: { $0.isGuideline() })?.pkDrawing else {
             return
         }
         calculator?.updatePixelsExistence(
-            size: canvasView.bounds.size,
+            size: size,
             sketchedDrawing: sketchedDrawing,
             guidelineDrawing: guidelineDrawing
         )
@@ -90,7 +94,9 @@ final class CanvasViewModel: ObservableObject {
         guard let calculator = calculator else {
             return
         }
-        resource.setAmount(resource.getAmount() - calculator.getJustChangedPixels(), maxAmount: 50000)
+        let amount = resource.getAmount() - calculator.getJustChangedPixels()
+        let maxAmount = calculator.getOriginalSketchedPixels()
+        resource.setAmount(amount, maxAmount: maxAmount)
     }
     
     func updateProgress() {

@@ -7,7 +7,7 @@
 
 import PencilKit
 
-final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasViewDelegate {
+final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, CanvasViewDelegate {
     weak var viewModel: CanvasViewModel?
     weak var layer: CanvasLayer?
     
@@ -23,21 +23,22 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, PKCanvasVie
     func end(point: CGPoint) {
     }
     
-    func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
-        DispatchQueue.main.async {
-            self.viewModel?.calculateSketching(canvasView: canvasView)
-            self.viewModel?.updateResource()
-            self.viewModel?.updateProgress()
-        }
-        layer?.pkDrawing = canvasView.drawing
+    func canvasViewLayersDidChange(size: CGSize) {
+        updateSketching(size: size)
     }
     
-    private func printDrawing(canvasView: PKCanvasView) {
-        let drawing = Drawing.build(
-            pkDrawing: canvasView.drawing,
-            canvasSize: canvasView.bounds.size
-        )
-        let pointsCount = canvasView.drawing.getPointsCount()
-        print("@LOG drawing \(pointsCount) \(drawing.getRawValue()) \(drawing.strokes.count) \(pointsCount)")
+    func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+        layer?.pkDrawing = canvasView.drawing
+        updateSketching(size: canvasView.bounds.size)
+    }
+    
+    private func updateSketching(size: CGSize) {
+        DispatchQueue.global(qos: .default).async {
+            self.viewModel?.calculateSketching(size: size)
+            DispatchQueue.main.async {
+                self.viewModel?.updateResource()
+                self.viewModel?.updateProgress()
+            }
+        }
     }
 }

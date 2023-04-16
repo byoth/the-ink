@@ -10,9 +10,10 @@ import PencilKit
 
 final class SketchingCalculator {
     let tolerance: CGFloat
-    private var sketchedPixelsExistence: [Bool] = []
     private var lastSketchedPixelsExistence: [Bool] = []
+    private var sketchedPixelsExistence: [Bool] = []
     private var guidelinePixelsExistence: [Bool] = []
+    private var originalSketchedPixels: Int? = nil
     private var originalSimilarity: CGFloat? = nil
     
     init(tolerance: CGFloat) {
@@ -27,6 +28,7 @@ final class SketchingCalculator {
         if isFirstComparing() {
             let guidelineImage = guidelineDrawing.image(from: rect, scale: 1)
             guidelinePixelsExistence = guidelineImage.getPixelsExistence()
+            originalSketchedPixels = sketchedPixelsExistence.filter { $0 }.count
             originalSimilarity = getSimilarity()
         }
     }
@@ -38,17 +40,24 @@ final class SketchingCalculator {
         return sketchedPixelsExistence.filter { $0 }.count - lastSketchedPixelsExistence.filter { $0 }.count
     }
     
+    func getOriginalSketchedPixels() -> Int {
+        guard let originalSketchedPixels = originalSketchedPixels else {
+            return 0
+        }
+        return Int(CGFloat(originalSketchedPixels) / tolerance)
+    }
+    
     func getAccuracy() -> CGFloat {
         guard let originalSimilarity = originalSimilarity,
               originalSimilarity < 1 else {
             return 0
         }
         let accuracy = (getSimilarity() - originalSimilarity) / (1 - originalSimilarity)
-        return accuracy.isNormal ? min(max(accuracy * tolerance, 0), 1) : 0
+        return accuracy.isNormal ? accuracy * tolerance : 0
     }
     
     private func isFirstComparing() -> Bool {
-        originalSimilarity == nil
+        originalSketchedPixels == nil && originalSimilarity == nil
     }
     
     private func getSimilarity() -> CGFloat {

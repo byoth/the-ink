@@ -11,17 +11,15 @@ struct CanvasLayerView: View {
     private weak var layer: CanvasLayer?
     private weak var toolPicker: ToolPicker?
     private weak var receiver: CanvasSketchingReceiver?
-    let isSketchable: Bool
     @State private var canvasView = InheritedPKCanvasView()
     
-    init(layer: CanvasLayer? = nil,
-         toolPicker: ToolPicker? = .shared,
-         receiver: CanvasSketchingReceiver? = nil,
+    init(layer: CanvasLayer?,
+         toolPicker: ToolPicker?,
+         receiver: CanvasSketchingReceiver?,
          isSketchable: Bool) {
         self.layer = layer
         self.toolPicker = toolPicker
         self.receiver = receiver
-        self.isSketchable = isSketchable
         if isSketchable {
             setupSketching()
         }
