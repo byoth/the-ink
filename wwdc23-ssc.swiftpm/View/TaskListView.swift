@@ -89,8 +89,8 @@ struct TaskListView: View {
 struct TaskListView_Previews: PreviewProvider {
     static var previews: some View {
         let taskManager = TaskManager()
-        let progress = SketchingProgress()
         let resource = SketchingResource()
+        let progress = SketchingProgress()
         return TaskListView(
             taskManager: taskManager,
             resource: resource,

@@ -25,11 +25,11 @@ final class SkyBackgroundViewModel: ObservableObject {
     }
     
     private func subscribeObjects() {
-        subscribeObjectForBackground(object: resource)
-        subscribeObjectForBackground(object: progress)
+        subscribeObjectForColor(object: resource)
+        subscribeObjectForColor(object: progress)
     }
     
-    private func subscribeObjectForBackground<O: ObservableObject & Gaugeable>(object: O) {
+    private func subscribeObjectForColor<O: ObservableObject & Gaugeable>(object: O) {
         object.objectWillChange
             .receive(on: DispatchQueue.main)
             .map { _ in object.getPercentage() }

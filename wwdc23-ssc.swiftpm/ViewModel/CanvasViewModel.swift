@@ -14,7 +14,7 @@ final class CanvasViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     let taskManager: TaskManager
-    @Published var layers: [CanvasLayerType] = []
+    private var calculator: SketchingCalculator?
     @Published var fleeingAnimals: [FleeingAnimal] = []
     @Published var flyingAnimals: [FlyingAnimal] = []
     private var cancellables = Set<AnyCancellable>()
@@ -37,19 +37,29 @@ final class CanvasViewModel: ObservableObject {
     }
     
     private func subscribeObjects() {
-        toolPicker.objectWillChange
+        Publishers
+            .Merge3(
+                toolPicker.objectWillChange,
+                resource.objectWillChange,
+                taskManager.objectWillChange
+            )
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
         
         taskManager.objectWillChange
-            .map { self.taskManager.getCurrentTask()?.layers ?? [] }
-            .filter { !$0.isEmpty }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.layers = $0
+                self?.setupSketchingCalculator()
             }
             .store(in: &cancellables)
+    }
+    
+    private func setupSketchingCalculator() {
+        let tolerance = taskManager.getCurrentTask()?.progress?.sketchingTolerance ?? 1
+        calculator = SketchingCalculator(tolerance: tolerance)
     }
     
     private func showPeacefulEffect() {
@@ -63,34 +73,31 @@ final class CanvasViewModel: ObservableObject {
         }
     }
     
-    func updateResource(canvasView: InheritedPKCanvasView) {
-        let initialPointsCount = canvasView.getInitialPointCount()
-        let currentPointsCount = canvasView.drawing.getPointsCount()
-        resource.setAmount(
-            initialPointsCount - currentPointsCount,
-            maxAmount: Int(Double(initialPointsCount) * 0.9)
-        )
-    }
-    
-    func updateProgress(canvasView: PKCanvasView) {
+    func calculateSketching(canvasView: PKCanvasView) {
         let layers = getCurrentLayers()
-        guard let drawing = layers.last?.pkDrawing,
+        guard let sketchedDrawing = layers.last?.pkDrawing,
               let guidelineDrawing = layers.last(where: { $0.isGuideline() })?.pkDrawing else {
             return
         }
-        let size = canvasView.bounds.size
-        DispatchQueue.global(qos: .userInteractive).async {
-            let comparer = DrawingComparer(
-                drawing: drawing,
-                guidelineDrawing: guidelineDrawing,
-                size: size
-            )
-            let accuracy = comparer.getAccuracy()
-            DispatchQueue.main.async {
-                // TODO: factor 조정
-                self.progress.setAccuracy(accuracy * 3)
-            }
+        calculator?.updatePixelsExistence(
+            size: canvasView.bounds.size,
+            sketchedDrawing: sketchedDrawing,
+            guidelineDrawing: guidelineDrawing
+        )
+    }
+    
+    func updateResource() {
+        guard let calculator = calculator else {
+            return
         }
+        resource.setAmount(resource.getAmount() - calculator.getJustChangedPixels(), maxAmount: 50000)
+    }
+    
+    func updateProgress() {
+        guard let calculator = calculator else {
+            return
+        }
+        progress.setAccuracy(calculator.getAccuracy())
     }
     
     func appendFleeingAnimal(origin: CGPoint) {
@@ -99,16 +106,16 @@ final class CanvasViewModel: ObservableObject {
         }
         let animal = FleeingAnimal(origin: origin)
         fleeingAnimals.append(animal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
-            self.fleeingAnimals.removeAll { $0 === animal }
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) { [weak self] in
+            self?.fleeingAnimals.removeAll { $0 === animal }
         }
     }
     
     func appendFlyingAnimal() {
         let animal = FlyingAnimal()
         flyingAnimals.append(animal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
-            self.flyingAnimals.removeAll { $0 === animal }
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) { [weak self] in
+            self?.flyingAnimals.removeAll { $0 === animal }
         }
     }
     
@@ -117,15 +124,17 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func getCurrentLayers() -> [CanvasLayer] {
-        let layers = taskManager.getCurrentTask()?.layers ?? []
-        return allLayers.filter { layers.contains($0.type) }
+        taskManager.getCurrentTask()?.layers
+            .compactMap { type in
+                allLayers.first { $0.type == type }
+            } ?? []
     }
     
     func isCanvasBlocked() -> Bool {
         !isSketchable() || (!isErasing() && resource.isEmpty())
     }
     
-    func isSketchable() -> Bool {
+    private func isSketchable() -> Bool {
         taskManager.getCurrentSection()?.isSketchable == true
     }
     

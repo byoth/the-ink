@@ -9,7 +9,6 @@ import PencilKit
 
 final class InheritedPKCanvasView: PKCanvasView {
     weak var receiver: TouchEventReceivable?
-    private var initialPointsCount: Int?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -33,14 +32,5 @@ final class InheritedPKCanvasView: PKCanvasView {
         let touch = touches.first!
         let point = touch.location(in: self)
         return point
-    }
-    
-    func setup(drawing: PKDrawing) {
-        initialPointsCount = drawing.getPointsCount()
-        self.drawing = drawing
-    }
-    
-    func getInitialPointCount() -> Int {
-        initialPointsCount ?? 1
     }
 }

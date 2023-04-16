@@ -43,10 +43,12 @@ struct CanvasLayerView: View {
     }
     
     private func applyDrawing() {
-        guard let drawing = layer?.getTemplateDrawing().getPkDrawing(canvasSize: canvasView.bounds.size) else {
+        guard let drawing = layer?
+            .getTemplateDrawing()
+            .getPkDrawing(canvasSize: canvasView.bounds.size) else {
             return
         }
         layer?.pkDrawing = drawing
-        canvasView.setup(drawing: drawing)
+        canvasView.drawing = drawing
     }
 }

@@ -40,18 +40,18 @@ extension UIImage {
                 let guidelinePixelInfo = guidelineData + (pixelIndex * 4)
                 let alpha = CGFloat(pixelInfo[3]) / 255
                 let guidelineAlpha = CGFloat(guidelinePixelInfo[3]) / 255
-                let isOpaque = alpha >= opaqueAlphaStandard
-                let isTemplateOpaque = guidelineAlpha >= opaqueAlphaStandard
+                let isOpaque = alpha > 0
+                let isGuidelineOpaque = guidelineAlpha > 0
                 
                 if isOpaque {
                     pixelsCount += 1
                 }
                 
-                if isTemplateOpaque {
+                if isGuidelineOpaque {
                     guidelinePixelsCount += 1
                 }
                 
-                if isOpaque && isTemplateOpaque {
+                if isOpaque && isGuidelineOpaque {
                     matchingPixelsCount += 1
                 }
             }
@@ -60,9 +60,28 @@ extension UIImage {
         let matchingRate = CGFloat(matchingPixelsCount) / CGFloat(pixelsCount)
         let opaqueRate = CGFloat(pixelsCount) / CGFloat(totalPixelsCount)
         let guidelineOpaqueRate = CGFloat(guidelinePixelsCount) / CGFloat(totalPixelsCount)
-        let penaltyRate = min((opaqueRate * mercyFactor) / guidelineOpaqueRate, 1)
+        let penaltyRate = min((opaqueRate) / guidelineOpaqueRate, 1)
         let accuracy = matchingRate * penaltyRate
         
         return accuracy
+    }
+    
+    func getPixelsExistence() -> [Bool] {
+        guard let data = cgImage?.dataProvider?.data,
+              let dataPtr = CFDataGetBytePtr(data) else {
+            return []
+        }
+        var existence = [Bool]()
+        let width = Int(size.width)
+        let height = Int(size.height)
+        for y in 0 ..< height {
+            for x in 0 ..< width {
+                let index = (y * width) + x
+                let info = dataPtr + (index * 4)
+                let alpha = CGFloat(info[3]) / 255
+                existence.append(alpha > 0)
+            }
+        }
+        return existence
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 
 final class SketchingResource: ObservableObject, Gaugeable {
     @Published private var amount: Int
-    private var maxAmount: Int
+    @Published private var maxAmount: Int
     
     init(amount: Int = 0,
          maxAmount: Int = 1) {
@@ -27,5 +27,9 @@ final class SketchingResource: ObservableObject, Gaugeable {
     func getRate() -> CGFloat {
         let rate = CGFloat(amount) / CGFloat(maxAmount)
         return rate.isNormal ? rate : 0
+    }
+    
+    func getAmount() -> Int {
+        amount
     }
 }

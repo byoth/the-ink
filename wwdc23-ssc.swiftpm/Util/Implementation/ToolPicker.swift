@@ -13,11 +13,6 @@ final class ToolPicker: NSObject, ObservableObject {
     private let toolPicker = PKToolPicker()
     private var lastObservers = [PKToolPickerObserver]()
     
-    private override init() {
-        super.init()
-        toolPicker.selectedTool = PKEraserTool(.vector)
-    }
-    
     func connectCanvasView(_ canvasView: PKCanvasView) {
         removeLastObservers()
         toolPicker.addObserver(self)
