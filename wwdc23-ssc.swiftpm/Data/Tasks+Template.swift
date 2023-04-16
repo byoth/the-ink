@@ -19,6 +19,7 @@ extension TaskSection {
     
     static let GetResources = TaskSection(
         title: "1. GET RESOURCES",
+        canAnimalBeFleeing: true,
         tasks: [
             Task.RemoveTrees,
             Task.RemovePond,

@@ -101,7 +101,7 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func appendFleeingAnimal(origin: CGPoint) {
-        guard isErasing() && taskManager.canBeAnimalFleeing() else {
+        guard isErasing() && taskManager.canAnimalBeFleeing() else {
             return
         }
         let animal = FleeingAnimal(origin: origin)

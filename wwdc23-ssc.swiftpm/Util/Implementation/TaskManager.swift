@@ -61,8 +61,8 @@ final class TaskManager: ObservableObject {
         currentSectionIndex * 10 + currentTaskIndex
     }
     
-    func canBeAnimalFleeing() -> Bool {
-        currentSectionIndex == 0
+    func canAnimalBeFleeing() -> Bool {
+        getCurrentSection()?.canAnimalBeFleeing == true
     }
     
     private func getSectionIndex(section: TaskSection) -> Int {
