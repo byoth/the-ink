@@ -55,12 +55,15 @@ final class ScriptViewModel: ObservableObject {
     }
     
     func gotoNextScript() {
+        guard !isLastTask() else {
+            return
+        }
         if isTypingAnimation() {
             displayingScript = getCurrentScript()
         } else if hasNextScript() {
             displayingScript = ""
             currentScriptIndex += 1
-        } else if canGotoNextTask() {
+        } else if !hasCurrentProgress() {
             taskManager.gotoNextTask()
         }
     }
@@ -69,8 +72,8 @@ final class ScriptViewModel: ObservableObject {
         scripts[safe: currentScriptIndex] ?? ""
     }
     
-    func hasNext() -> Bool {
-        hasNextScript() || canGotoNextTask()
+    func hasNextButton() -> Bool {
+        (hasNextScript() || !hasCurrentProgress()) && !isLastTask()
     }
     
     private func isTypingAnimation() -> Bool {
@@ -81,7 +84,14 @@ final class ScriptViewModel: ObservableObject {
         currentScriptIndex < scripts.count - 1
     }
     
-    private func canGotoNextTask() -> Bool {
-        taskManager.getCurrentTask()?.progress == nil
+    private func hasCurrentProgress() -> Bool {
+        taskManager.getCurrentTask()?.progress != nil
+    }
+    
+    private func isLastTask() -> Bool {
+        guard let task = taskManager.getCurrentTask() else {
+            return false
+        }
+        return taskManager.sections.last?.tasks.last == task
     }
 }

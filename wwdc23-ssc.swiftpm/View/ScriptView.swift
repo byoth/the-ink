@@ -24,7 +24,7 @@ struct ScriptView: View {
                     text: viewModel.displayingScript,
                     width: geometry.size.width
                 )
-                if viewModel.hasNext() {
+                if viewModel.hasNextButton() {
                     BlinkingTriangle(sizeLength: 20, color: .white)
                 }
             }

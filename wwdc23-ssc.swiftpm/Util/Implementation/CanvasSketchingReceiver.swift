@@ -11,6 +11,9 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, CanvasViewD
     weak var viewModel: CanvasViewModel?
     weak var layer: CanvasLayer?
     
+    // TRICK: canvasView의 size가 가끔 .zero일 때가 있어서 이전 size를 저장해서 사용
+    private var lastSize: CGSize?
+    
     func begin(point: CGPoint) {
     }
     
@@ -28,8 +31,12 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, CanvasViewD
     }
     
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+        let size = canvasView.bounds.size
+        if size != .zero {
+            lastSize = size
+        }
         layer?.pkDrawing = canvasView.drawing
-        updateSketching(size: canvasView.bounds.size)
+        updateSketching(size: lastSize ?? size)
     }
     
     private func updateSketching(size: CGSize) {

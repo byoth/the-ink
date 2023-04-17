@@ -10,10 +10,13 @@ import PencilKit
 
 final class SketchingCalculator {
     let tolerance: CGFloat
-    private var lastSketchedPixelsExistence: [Bool] = []
-    private var sketchedPixelsExistence: [Bool] = []
+    private var sketchedPixelsExistence: [Bool] = [] {
+        willSet {
+            lastSketchedPixelsExistence = sketchedPixelsExistence
+        }
+    }
     private var guidelinePixelsExistence: [Bool] = []
-    private var originalSketchedPixels: Int? = nil
+    private var lastSketchedPixelsExistence: [Bool] = []
     private var originalSimilarity: CGFloat? = nil
     
     init(tolerance: CGFloat) {
@@ -21,14 +24,15 @@ final class SketchingCalculator {
     }
     
     func updatePixelsExistence(size: CGSize, sketchedDrawing: PKDrawing, guidelineDrawing: PKDrawing) {
+        guard size != .zero else {
+            return
+        }
         let rect = CGRect(origin: .zero, size: size)
         let sketchImage = sketchedDrawing.image(from: rect, scale: 1)
-        lastSketchedPixelsExistence = sketchedPixelsExistence
         sketchedPixelsExistence = sketchImage.getPixelsExistence()
         if isFirstComparing() {
             let guidelineImage = guidelineDrawing.image(from: rect, scale: 1)
             guidelinePixelsExistence = guidelineImage.getPixelsExistence()
-            originalSketchedPixels = sketchedPixelsExistence.filter { $0 }.count
             originalSimilarity = getSimilarity()
         }
     }
@@ -41,10 +45,7 @@ final class SketchingCalculator {
     }
     
     func getOriginalSketchedPixels() -> Int {
-        guard let originalSketchedPixels = originalSketchedPixels else {
-            return 0
-        }
-        return Int(CGFloat(originalSketchedPixels) / tolerance)
+        Int(CGFloat(sketchedPixelsExistence.filter { $0 }.count) / tolerance)
     }
     
     func getAccuracy() -> CGFloat {
@@ -57,7 +58,7 @@ final class SketchingCalculator {
     }
     
     private func isFirstComparing() -> Bool {
-        originalSketchedPixels == nil && originalSimilarity == nil
+        originalSimilarity == nil
     }
     
     private func getSimilarity() -> CGFloat {
