@@ -147,7 +147,7 @@ final class CanvasViewModel: ObservableObject {
     }
     
     private func isSketchable() -> Bool {
-        taskManager.getCurrentSection()?.isSketchable == true
+        taskManager.getCurrentSection()?.isSketchable == true && !taskManager.isWaitingForNextTask()
     }
     
     private func isErasing() -> Bool {

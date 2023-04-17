@@ -9,6 +9,7 @@ import Foundation
 
 final class TaskManager: ObservableObject {
     let sections: [TaskSection]
+    @Published private var isWaiting = false
     @Published private var currentSectionIndex = 0
     @Published private var currentTaskIndex = 0
     
@@ -26,6 +27,14 @@ final class TaskManager: ObservableObject {
         }
         if getCurrentTask()?.isSkippable() == true {
             gotoNextTask()
+        }
+    }
+    
+    func waitForNextTask(completion: @escaping () -> Void) {
+        isWaiting = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.isWaiting = false
+            completion()
         }
     }
     
@@ -63,6 +72,10 @@ final class TaskManager: ObservableObject {
     
     func canAnimalBeFleeing() -> Bool {
         getCurrentSection()?.canAnimalBeFleeing == true
+    }
+    
+    func isWaitingForNextTask() -> Bool {
+        isWaiting
     }
     
     private func getSectionIndex(section: TaskSection) -> Int {

@@ -65,8 +65,8 @@ final class TaskListViewModel: ObservableObject {
             self.currentProgressRate = object.getRate()
         }
         if object.isFull() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.taskManager.gotoNextTask()
+            taskManager.waitForNextTask { [weak self] in
+                self?.taskManager.gotoNextTask()
             }
         }
     }
