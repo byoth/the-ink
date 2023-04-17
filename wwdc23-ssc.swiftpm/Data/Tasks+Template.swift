@@ -49,7 +49,7 @@ extension TaskSection {
 extension Task {
     static let Introduction = Task(
         title: "Introduction",
-        layers: [.forNature],
+        layers: [.nature],
         scripts: [
             "Hello, Player!",
             "We gonna do blahblah. blahblahblah. blahblah. blahblahblah."
@@ -70,7 +70,7 @@ extension Task {
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
-        layers: [.emptyGuideline, .forNature],
+        layers: [.emptyGuideline, .nature],
         scripts: [
             "Fill the ink gauge~"
         ],
@@ -85,7 +85,7 @@ extension Task {
     
     static let BuildFactory = Task(
         title: "Build a factory",
-        layers: [.forNature, .factoryGuideline, .forFactory],
+        layers: [.nature, .factoryGuideline, .forFactory],
         progress: TaskProgress(
             title: "BUILD RATE",
             gaugeType: SketchingProgress.self,
@@ -97,7 +97,7 @@ extension Task {
     
     static let MakeProducts = Task(
         title: "Make products",
-        layers: [.forNature, .forFactory, .pollutionGuideline, .forPollution],
+        layers: [.nature, .forFactory, .pollutionGuideline, .forPollution],
         progress: TaskProgress(
             title: "PRODUCTION RATE",
             gaugeType: SketchingProgress.self,
@@ -109,7 +109,7 @@ extension Task {
     
     static let RemovePollution = Task(
         title: "Remove Pollution",
-        layers: [.forNature, .forFactory, .emptyGuideline, .forPollution],
+        layers: [.nature, .forFactory, .emptyGuideline, .forPollution],
         progress: TaskProgress(
             title: "RECOVERING RATE",
             gaugeType: SketchingProgress.self,
@@ -121,7 +121,7 @@ extension Task {
     
     static let RemoveFactory = Task(
         title: "Remove Factory",
-        layers: [.forNature, .forPollution, .emptyGuideline, .forFactory],
+        layers: [.nature, .forPollution, .emptyGuideline, .forFactory],
         progress: TaskProgress(
             title: "RECOVERING RATE",
             gaugeType: SketchingProgress.self,
@@ -133,7 +133,7 @@ extension Task {
     
     static let RecoverNature = Task(
         title: "Recover Nature",
-        layers: [.emptyGuideline, .forNature],
+        layers: [.emptyGuideline, .forFreeDrawing],
         scripts: [
             "Recover Nature!"
         ]

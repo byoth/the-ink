@@ -78,6 +78,13 @@ final class TaskManager: ObservableObject {
         isWaiting
     }
     
+    func isCurrentTaskLast() -> Bool {
+        guard let task = getCurrentTask() else {
+            return false
+        }
+        return sections.last?.tasks.last == task
+    }
+    
     private func getSectionIndex(section: TaskSection) -> Int {
         sections
             .enumerated()

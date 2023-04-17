@@ -11,8 +11,7 @@ typealias RGB = (Int, Int, Int)
 
 enum SkyRGB {
     static let first = (70, 115, 255)
-    static let second = (75, 110, 215)
-    static let third = (80, 105, 175)
-    static let fourth = (85, 100, 135)
-    static let fifth = (95, 95, 95)
+    static let second = (80, 110, 200)
+    static let third = (90, 105, 150)
+    static let fourth = (100, 100, 100)
 }

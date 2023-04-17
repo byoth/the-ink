@@ -8,9 +8,10 @@
 import Foundation
 
 enum CanvasLayerType: String, CaseIterable {
-    case forNature
+    case nature
     case forFactory
     case forPollution
+    case forFreeDrawing
     case constructionSiteGuideline
     case factoryGuideline
     case pollutionGuideline
@@ -18,11 +19,13 @@ enum CanvasLayerType: String, CaseIterable {
     
     func getTemplateDrawing() -> Drawing {
         switch self {
-        case .forNature:
+        case .nature:
             return .nature
         case .forFactory:
             return .empty
         case .forPollution:
+            return .empty
+        case .forFreeDrawing:
             return .empty
         case .constructionSiteGuideline:
             return .constructionSiteGuideline
