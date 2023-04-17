@@ -86,6 +86,9 @@ extension Task {
     static let BuildFactory = Task(
         title: "Build a factory",
         layers: [.nature, .factoryGuideline, .forFactory],
+        scripts: [
+            "Build a factory~"
+        ],
         progress: TaskProgress(
             title: "BUILD RATE",
             gaugeType: SketchingProgress.self,
@@ -98,6 +101,9 @@ extension Task {
     static let MakeProducts = Task(
         title: "Make products",
         layers: [.nature, .forFactory, .pollutionGuideline, .forPollution],
+        scripts: [
+            "Make products~"
+        ],
         progress: TaskProgress(
             title: "PRODUCTION RATE",
             gaugeType: SketchingProgress.self,
@@ -108,8 +114,11 @@ extension Task {
     )
     
     static let RemovePollution = Task(
-        title: "Remove Pollution",
+        title: "Remove the pollution",
         layers: [.nature, .forFactory, .emptyGuideline, .forPollution],
+        scripts: [
+            "Remove the pollution~"
+        ],
         progress: TaskProgress(
             title: "RECOVERING RATE",
             gaugeType: SketchingProgress.self,
@@ -120,8 +129,11 @@ extension Task {
     )
     
     static let RemoveFactory = Task(
-        title: "Remove Factory",
+        title: "Remove a factory",
         layers: [.nature, .forPollution, .emptyGuideline, .forFactory],
+        scripts: [
+            "Remove a factory~"
+        ],
         progress: TaskProgress(
             title: "RECOVERING RATE",
             gaugeType: SketchingProgress.self,
@@ -132,10 +144,10 @@ extension Task {
     )
     
     static let RecoverNature = Task(
-        title: "Recover Nature",
+        title: "Recover nature",
         layers: [.emptyGuideline, .forFreeDrawing],
         scripts: [
-            "Recover Nature!"
+            "Recover nature~"
         ]
     )
 }

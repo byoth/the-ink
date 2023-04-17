@@ -27,15 +27,13 @@ final class TaskManager: ObservableObject {
         }
         if getCurrentTask()?.isSkippable() == true {
             gotoNextTask()
+        } else {
+            isWaiting = false
         }
     }
     
-    func waitForNextTask(completion: @escaping () -> Void) {
+    func waitForNextTask() {
         isWaiting = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.isWaiting = false
-            completion()
-        }
     }
     
     func isHidden(section: TaskSection) -> Bool {
@@ -54,6 +52,25 @@ final class TaskManager: ObservableObject {
         getTaskIndex(task: task) < currentTaskIndex
     }
     
+    func isCurrentTaskLast() -> Bool {
+        guard let task = getCurrentTask() else {
+            return false
+        }
+        return isLast(task: task)
+    }
+    
+    func isLast(task: Task) -> Bool {
+        task == sections.last?.tasks.last
+    }
+    
+    func isWaitingForNextTask() -> Bool {
+        isWaiting
+    }
+    
+    func canAnimalBeFleeing() -> Bool {
+        getCurrentSection()?.canAnimalBeFleeing == true
+    }
+    
     func getSections() -> [TaskSection] {
         sections
     }
@@ -68,21 +85,6 @@ final class TaskManager: ObservableObject {
     
     func getCurrentStepHashValue() -> Int {
         currentSectionIndex * 10 + currentTaskIndex
-    }
-    
-    func canAnimalBeFleeing() -> Bool {
-        getCurrentSection()?.canAnimalBeFleeing == true
-    }
-    
-    func isWaitingForNextTask() -> Bool {
-        isWaiting
-    }
-    
-    func isCurrentTaskLast() -> Bool {
-        guard let task = getCurrentTask() else {
-            return false
-        }
-        return sections.last?.tasks.last == task
     }
     
     private func getSectionIndex(section: TaskSection) -> Int {

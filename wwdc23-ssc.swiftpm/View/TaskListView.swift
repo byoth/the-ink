@@ -58,10 +58,15 @@ struct TaskListView: View {
                 if viewModel.isCompleted(section: section, task: task) {
                     Text("✅")
                 } else if isActive {
-                    ProgressView()
+                    if !viewModel.taskManager.isLast(task: task) {
+                        ProgressView()
+                    } else {
+                        Text("👍")
+                    }
                 }
             }
-            if let progress = task.progress, isActive {
+            if let progress = task.progress,
+               task == viewModel.taskManager.getCurrentTask() && isActive {
                 progressView(progress: progress)
             }
         }

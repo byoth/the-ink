@@ -34,18 +34,20 @@ final class TaskListViewModel: ObservableObject {
     }
     
     private func subscribeTaskManager() {
+        sections = taskManager.sections
+        
         taskManager.objectWillChange
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .map { _ in self.taskManager.getSections() }
+            .map { self.taskManager.getCurrentTask() }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.sections = $0
+            .sink { [weak self] _ in
                 self?.currentProgressRate = 0
             }
             .store(in: &cancellables)
         
         taskManager.objectWillChange
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.global(qos: .userInteractive))
             .map { self.isEnding() }
             .filter { $0 }
             .first()
@@ -76,9 +78,7 @@ final class TaskListViewModel: ObservableObject {
             self.currentProgressRate = object.getRate()
         }
         if object.isFull() {
-            taskManager.waitForNextTask { [weak self] in
-                self?.taskManager.gotoNextTask()
-            }
+            taskManager.waitForNextTask()
         }
     }
     
@@ -99,6 +99,6 @@ final class TaskListViewModel: ObservableObject {
     }
     
     private func isEnding() -> Bool {
-        taskManager.getCurrentTask() == .FillInkGauge && currentProgressRate >= 1
+        taskManager.getCurrentTask() == .MakeProducts && currentProgressRate >= 1
     }
 }
