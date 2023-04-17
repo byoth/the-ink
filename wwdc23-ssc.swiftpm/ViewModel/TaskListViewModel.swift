@@ -34,8 +34,12 @@ final class TaskListViewModel: ObservableObject {
     
     private func subscribeTaskManager() {
         taskManager.objectWillChange
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .map { _ in self.taskManager.getSections() }
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.sections = self?.taskManager.getSections() ?? []
+                self?.sections = $0
                 self?.currentProgressRate = 0
             }
             .store(in: &cancellables)
@@ -43,7 +47,7 @@ final class TaskListViewModel: ObservableObject {
     
     private func subscribeObjectForGauge<O: ObservableObject & Gaugeable>(object: O) {
         object.objectWillChange
-            .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
             .map { _ in object.getPercentage() }
             .removeDuplicates()
             .sink { [weak self] _ in
@@ -57,7 +61,9 @@ final class TaskListViewModel: ObservableObject {
               progress.gaugeType == type(of: object) else {
             return
         }
-        currentProgressRate = object.getRate()
+        DispatchQueue.main.async {
+            self.currentProgressRate = object.getRate()
+        }
         if object.isFull() {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.taskManager.gotoNextTask()

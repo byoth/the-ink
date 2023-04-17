@@ -26,12 +26,12 @@ struct CanvasLayerView: View {
     }
     
     var body: some View {
-        CanvasUIView(canvasView: $canvasView, receiver: receiver)
-            .onAppear {
-                DispatchQueue.main.async {
-                    applyDrawing()
+        GeometryReader { geometry in
+            CanvasUIView(canvasView: $canvasView, receiver: receiver)
+                .onAppear {
+                    applyDrawing(size: geometry.size)
                 }
-            }
+        }
     }
     
     private func setupSketching() {
@@ -40,13 +40,15 @@ struct CanvasLayerView: View {
         canvasView.receiver = receiver
     }
     
-    private func applyDrawing() {
+    private func applyDrawing(size: CGSize) {
         guard let drawing = layer?
             .getTemplateDrawing()
-            .getPkDrawing(canvasSize: canvasView.bounds.size) else {
+            .getPkDrawing(canvasSize: size) else {
             return
         }
         layer?.pkDrawing = drawing
-        canvasView.drawing = drawing
+        DispatchQueue.main.async {
+            canvasView.drawing = drawing
+        }
     }
 }

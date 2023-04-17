@@ -31,7 +31,7 @@ final class SkyBackgroundViewModel: ObservableObject {
     
     private func subscribeObjectForColor<O: ObservableObject & Gaugeable>(object: O) {
         object.objectWillChange
-            .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
             .map { _ in object.getPercentage() }
             .removeDuplicates()
             .sink { [weak self] _ in
@@ -48,18 +48,20 @@ final class SkyBackgroundViewModel: ObservableObject {
         let startingRGB = progress.startingBackgroundRGB
         let endingRGB = progress.endingBackgroundRGB
         let factor = object.getRate()
-        rgb = (
-            getCalculatedValue(starting: startingRGB.0, ending: endingRGB.0, factor: factor),
-            getCalculatedValue(starting: startingRGB.1, ending: endingRGB.1, factor: factor),
-            getCalculatedValue(starting: startingRGB.2, ending: endingRGB.2, factor: factor)
-        )
+        DispatchQueue.main.async {
+            self.rgb = (
+                Self.getCalculatedValue(starting: startingRGB.0, ending: endingRGB.0, factor: factor),
+                Self.getCalculatedValue(starting: startingRGB.1, ending: endingRGB.1, factor: factor),
+                Self.getCalculatedValue(starting: startingRGB.2, ending: endingRGB.2, factor: factor)
+            )
+        }
     }
     
     func getRGB() -> RGB? {
         rgb
     }
     
-    private func getCalculatedValue(starting: Int, ending: Int, factor: CGFloat) -> Int {
+    private static func getCalculatedValue(starting: Int, ending: Int, factor: CGFloat) -> Int {
         starting + Int(CGFloat(ending - starting) * factor)
     }
 }

@@ -47,6 +47,7 @@ final class CanvasViewModel: ObservableObject {
                 resource.objectWillChange,
                 taskManager.objectWillChange
             )
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.objectWillChange.send()
@@ -54,7 +55,7 @@ final class CanvasViewModel: ObservableObject {
             .store(in: &cancellables)
         
         taskManager.objectWillChange
-            .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
             .sink { [weak self] in
                 self?.setupSketchingCalculator()
             }
@@ -96,14 +97,19 @@ final class CanvasViewModel: ObservableObject {
         }
         let amount = resource.getAmount() - calculator.getJustChangedPixels()
         let maxAmount = calculator.getOriginalSketchedPixels()
-        resource.setAmount(amount, maxAmount: maxAmount)
+        DispatchQueue.main.async {
+            self.resource.setAmount(amount, maxAmount: maxAmount)
+        }
     }
     
     func updateProgress() {
         guard let calculator = calculator else {
             return
         }
-        progress.setAccuracy(calculator.getAccuracy())
+        let accuracy = calculator.getAccuracy()
+        DispatchQueue.main.async {
+            self.progress.setAccuracy(accuracy)
+        }
     }
     
     func appendFleeingAnimal(origin: CGPoint) {

@@ -48,9 +48,7 @@ struct CanvasView: View {
                 ResourceGaugeView(resource: viewModel.resource)
             }
             .onChange(of: layers) { _ in
-                DispatchQueue.main.async {
-                    viewModel.receiver.canvasViewLayersDidChange(size: geometry.size)
-                }
+                viewModel.receiver.canvasViewLayersDidChange(size: geometry.size)
             }
         }
         .aspectRatio(1 / 1, contentMode: .fit)

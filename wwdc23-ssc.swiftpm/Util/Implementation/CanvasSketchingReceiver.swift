@@ -33,12 +33,10 @@ final class CanvasSketchingReceiver: NSObject, TouchEventReceivable, CanvasViewD
     }
     
     private func updateSketching(size: CGSize) {
-        DispatchQueue.global(qos: .default).async {
+        DispatchQueue.global(qos: .userInteractive).async {
             self.viewModel?.calculateSketching(size: size)
-            DispatchQueue.main.async {
-                self.viewModel?.updateResource()
-                self.viewModel?.updateProgress()
-            }
+            self.viewModel?.updateResource()
+            self.viewModel?.updateProgress()
         }
     }
 }

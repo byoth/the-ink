@@ -24,9 +24,10 @@ final class ScriptViewModel: ObservableObject {
     
     private func subscribeTaskScripts() {
         taskManager.objectWillChange
-            .receive(on: DispatchQueue.main)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
             .map { self.taskManager.getCurrentTask()?.scripts ?? [] }
             .removeDuplicates()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.setScripts($0)
             }
@@ -35,8 +36,8 @@ final class ScriptViewModel: ObservableObject {
     
     private func setScripts(_ scripts: [String]) {
         self.scripts = scripts
-        displayingScript = ""
-        currentScriptIndex = 0
+        self.displayingScript = ""
+        self.currentScriptIndex = 0
     }
     
     private func applyTypingAnimation() {

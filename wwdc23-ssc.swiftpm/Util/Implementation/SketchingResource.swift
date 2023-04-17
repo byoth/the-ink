@@ -22,7 +22,6 @@ final class SketchingResource: ObservableObject, Gaugeable {
         if self.maxAmount == nil {
             self.maxAmount = maxAmount
         }
-        print("@LOG setAmount \(self.amount) \(self.maxAmount)")
     }
     
     func getRate() -> CGFloat {
