@@ -24,7 +24,7 @@ struct TaskListView: View {
         List {
             ForEach(viewModel.getSections()) { section in
                 Section(section.title) {
-                    if viewModel.isHidden(section: section) {
+                    if viewModel.taskManager.isHidden(section: section) {
                         lockedView()
                     } else {
                         ForEach(section.tasks) { task in
@@ -33,6 +33,9 @@ struct TaskListView: View {
                     }
                 }
             }
+        }
+        .sheet(isPresented: $viewModel.isEndingModalNeeded) {
+            EndingView()
         }
     }
     
@@ -48,7 +51,7 @@ struct TaskListView: View {
     
     private func taskView(section: TaskSection, task: Task) -> some View {
         Group {
-            let isActive = viewModel.isActive(section: section, task: task)
+            let isActive = viewModel.taskManager.isActive(section: section, task: task)
             HStack {
                 Text(task.title)
                 Spacer()

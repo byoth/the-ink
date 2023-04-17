@@ -55,16 +55,15 @@ final class ScriptViewModel: ObservableObject {
     }
     
     func gotoNextScript() {
-        guard !taskManager.isCurrentTaskLast() else {
-            return
-        }
         if isTypingAnimation() {
             displayingScript = getCurrentScript()
-        } else if hasNextScript() {
-            displayingScript = ""
-            currentScriptIndex += 1
-        } else if !hasCurrentProgress() {
-            taskManager.gotoNextTask()
+        } else if !taskManager.isCurrentTaskLast() {
+            if hasNextScript() {
+                displayingScript = ""
+                currentScriptIndex += 1
+            } else if !hasCurrentProgress() {
+                taskManager.gotoNextTask()
+            }
         }
     }
     

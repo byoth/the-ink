@@ -14,6 +14,7 @@ final class TaskListViewModel: ObservableObject {
     let progress: SketchingProgress
     @Published private var sections: [TaskSection]
     @Published private var currentProgressRate = CGFloat(0)
+    @Published var isEndingModalNeeded = false
     private var cancellables = Set<AnyCancellable>()
     
     init(taskManager: TaskManager,
@@ -41,6 +42,16 @@ final class TaskListViewModel: ObservableObject {
             .sink { [weak self] in
                 self?.sections = $0
                 self?.currentProgressRate = 0
+            }
+            .store(in: &cancellables)
+        
+        taskManager.objectWillChange
+            .map { self.isEnding() }
+            .filter { $0 }
+            .first()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.isEndingModalNeeded = true
             }
             .store(in: &cancellables)
     }
@@ -71,14 +82,6 @@ final class TaskListViewModel: ObservableObject {
         }
     }
     
-    func isHidden(section: TaskSection) -> Bool {
-        taskManager.isHidden(section: section)
-    }
-    
-    func isActive(section: TaskSection, task: Task) -> Bool {
-        taskManager.isActive(section: section, task: task)
-    }
-    
     func isCompleted(section: TaskSection, task: Task) -> Bool {
         let isSectionCompleted = taskManager.isCompleted(section: section)
         let isTaskCompleted = (!task.isSkippable() && taskManager.isCompleted(task: task))
@@ -91,11 +94,11 @@ final class TaskListViewModel: ObservableObject {
             .filter { $0.isShownInList }
     }
     
-    func getCurrentStepHashValue() -> Int {
-        taskManager.getCurrentStepHashValue()
-    }
-    
     func getCurrentProgressRate() -> CGFloat {
         currentProgressRate
+    }
+    
+    private func isEnding() -> Bool {
+        taskManager.getCurrentTask() == .FillInkGauge && currentProgressRate >= 1
     }
 }
