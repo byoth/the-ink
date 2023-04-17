@@ -83,10 +83,6 @@ final class TaskManager: ObservableObject {
         getCurrentSection()?.tasks[safe: currentTaskIndex]
     }
     
-    func getCurrentStepHashValue() -> Int {
-        currentSectionIndex * 10 + currentTaskIndex
-    }
-    
     private func getSectionIndex(section: TaskSection) -> Int {
         sections
             .enumerated()

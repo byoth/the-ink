@@ -9,20 +9,18 @@ import PencilKit
 
 final class ToolPicker: NSObject, ObservableObject {
     static let shared = ToolPicker()
-    
     private let toolPicker = PKToolPicker()
-    private var lastObservers = [PKToolPickerObserver]()
+    
+    override init() {
+        super.init()
+        toolPicker.selectedTool = PKEraserTool(.bitmap)
+        toolPicker.addObserver(self)
+    }
     
     func connectCanvasView(_ canvasView: PKCanvasView) {
-        removeLastObservers()
-        toolPicker.addObserver(self)
         toolPicker.addObserver(canvasView)
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         canvasView.becomeFirstResponder()
-    }
-    
-    private func removeLastObservers() {
-        lastObservers.forEach { toolPicker.removeObserver($0) }
     }
     
     func getTool() -> PKTool {

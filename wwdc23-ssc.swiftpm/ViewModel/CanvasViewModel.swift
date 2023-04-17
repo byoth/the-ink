@@ -131,10 +131,6 @@ final class CanvasViewModel: ObservableObject {
         }
     }
     
-    func guideUserToGetResource() {
-        // TODO: Toast or Script
-    }
-    
     func getCurrentLayers() -> [CanvasLayer] {
         taskManager.getCurrentTask()?.layers
             .compactMap { type in
@@ -143,10 +139,10 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func isCanvasBlocked() -> Bool {
-        !isSketchable() || (!isErasing() && resource.isEmpty())
+        !isErasing() && resource.isEmpty()
     }
     
-    private func isSketchable() -> Bool {
+    func isSketchable() -> Bool {
         taskManager.getCurrentSection()?.isSketchable == true && !taskManager.isWaitingForNextTask()
     }
     

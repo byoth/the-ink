@@ -95,7 +95,10 @@ final class TaskListViewModel: ObservableObject {
     }
     
     func getCurrentProgressRate() -> CGFloat {
-        currentProgressRate
+        guard !taskManager.isWaitingForNextTask() else {
+            return 1
+        }
+        return currentProgressRate
     }
     
     private func isEnding() -> Bool {

@@ -34,6 +34,10 @@ struct TaskListView: View {
                 }
             }
         }
+        .animation(
+            .easeInOut(duration: 0.5),
+            value: viewModel.taskManager.getCurrentTask()
+        )
         .sheet(isPresented: $viewModel.isEndingModalNeeded) {
             EndingView()
         }

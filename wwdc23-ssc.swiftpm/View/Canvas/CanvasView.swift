@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CanvasView: View {
     @ObservedObject private var viewModel: CanvasViewModel
+    @State private var isBlockingMessageHidden = false
     
     init(allLayers: [CanvasLayer],
          resource: SketchingResource,
@@ -39,7 +40,7 @@ struct CanvasView: View {
                     ForEach(viewModel.flyingAnimals) { animal in
                         FlyingAnimalView(animal: animal, canvasSize: geometry.size)
                     }
-                    if viewModel.isCanvasBlocked() {
+                    if viewModel.isCanvasBlocked() || !viewModel.isSketchable() {
                         blockingView()
                     }
                 }
@@ -74,11 +75,27 @@ struct CanvasView: View {
     }
     
     private func blockingView() -> some View {
-        Color.white
-            .opacity(0.01)
-            .onTapGesture {
-                viewModel.guideUserToGetResource()
+        ZStack {
+            Color.white
+                .opacity(0.01)
+            
+            if viewModel.isCanvasBlocked() {
+                Text("Needs to fill the ink gauge!")
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .background(
+                        .black.opacity(0.5),
+                        in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    )
+                    .opacity(isBlockingMessageHidden ? 0 : 1)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 1).repeatForever()) {
+                            isBlockingMessageHidden.toggle()
+                        }
+                    }
             }
+        }
     }
 }
 

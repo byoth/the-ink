@@ -10,7 +10,6 @@ import SwiftUI
 struct ResourceGaugeView: View {
     private static let lineWidth: CGFloat = 16
     private static let sizeLength: CGFloat = 64
-    
     @ObservedObject var resource: SketchingResource
     
     var body: some View {
