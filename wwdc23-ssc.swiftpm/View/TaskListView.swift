@@ -38,8 +38,10 @@ struct TaskListView: View {
             .easeInOut(duration: 0.5),
             value: viewModel.taskManager.getCurrentTask()
         )
-        .sheet(isPresented: $viewModel.isEndingModalNeeded) {
-            EndingView()
+        .sheet(isPresented: $viewModel.hasCurrentModal) {
+            if let modal = viewModel.getCurrentModal() {
+                modalView(modal: modal)
+            }
         }
     }
     
@@ -95,6 +97,20 @@ struct TaskListView: View {
             .frame(height: 16)
         }
         .padding(EdgeInsets(top: 4, leading: 8, bottom: 8, trailing: 8))
+    }
+    
+    private func modalView(modal: TaskModal) -> some View {
+        Group {
+            switch modal {
+            case .productsAreMade:
+                ProductsAreMadeView()
+                    .onDisappear {
+                        viewModel.taskManager.gotoNextTask()
+                    }
+            case .natureCanBeRecovered:
+                NatureCanBeRecoveredView()
+            }
+        }
     }
 }
 

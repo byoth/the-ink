@@ -13,8 +13,16 @@ final class TaskListViewModel: ObservableObject {
     let resource: SketchingResource
     let progress: SketchingProgress
     @Published private var sections: [TaskSection]
-    @Published private var currentProgressRate = CGFloat(0)
-    @Published var isEndingModalNeeded = false
+    @Published private var currentProgressRate = CGFloat(0) {
+        didSet {
+            guard currentProgressRate != oldValue else {
+                return
+            }
+            updateCurrentModalIfNeeded()
+        }
+    }
+    @Published private var currentModal: TaskModal?
+    @Published var hasCurrentModal = false
     private var cancellables = Set<AnyCancellable>()
     
     init(taskManager: TaskManager,
@@ -45,17 +53,6 @@ final class TaskListViewModel: ObservableObject {
                 self?.currentProgressRate = 0
             }
             .store(in: &cancellables)
-        
-        taskManager.objectWillChange
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .map { self.isEnding() }
-            .filter { $0 }
-            .first()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.isEndingModalNeeded = true
-            }
-            .store(in: &cancellables)
     }
     
     private func subscribeObjectForGauge<O: ObservableObject & Gaugeable>(object: O) {
@@ -82,10 +79,25 @@ final class TaskListViewModel: ObservableObject {
         }
     }
     
+    private func updateCurrentModalIfNeeded() {
+        guard let task = taskManager.getCurrentTask() else {
+            return
+        }
+        hasCurrentModal = true
+        if task == .MakeProducts && isCurrentProgressCompleted() {
+            currentModal = .productsAreMade
+        } else if task == .RecoverNature {
+            currentModal = .natureCanBeRecovered
+        } else {
+            currentModal = nil
+            hasCurrentModal = false
+        }
+    }
+    
     func isCompleted(section: TaskSection, task: Task) -> Bool {
         let isSectionCompleted = taskManager.isCompleted(section: section)
         let isTaskCompleted = (!task.isSkippable() && taskManager.isCompleted(task: task))
-        let isProgressCompleted = taskManager.getCurrentTask() == task && currentProgressRate >= 1
+        let isProgressCompleted = taskManager.getCurrentTask() == task && isCurrentProgressCompleted()
         return isSectionCompleted || isTaskCompleted || isProgressCompleted
     }
     
@@ -101,7 +113,11 @@ final class TaskListViewModel: ObservableObject {
         return currentProgressRate
     }
     
-    private func isEnding() -> Bool {
-        taskManager.getCurrentTask() == .MakeProducts && currentProgressRate >= 1
+    func getCurrentModal() -> TaskModal? {
+        currentModal
+    }
+    
+    private func isCurrentProgressCompleted() -> Bool {
+        currentProgressRate >= 1
     }
 }
