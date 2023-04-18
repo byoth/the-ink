@@ -41,7 +41,8 @@ final class SkyBackgroundViewModel: ObservableObject {
     }
     
     private func updateRGB(object: Gaugeable) {
-        guard let progress = taskManager.getCurrentTask()?.progress,
+        guard !taskManager.isWaitingForNextTask(),
+              let progress = taskManager.getCurrentTask()?.progress,
               progress.gaugeType == type(of: object) else {
             return
         }

@@ -15,6 +15,7 @@ struct ScriptUIView: UIViewRepresentable {
     func makeUIView(context: Context) -> UILabel {
         label.lineBreakMode = .byCharWrapping
         label.numberOfLines = 0
+        label.font = .boldSystemFont(ofSize: 18)
         label.textAlignment = .center
         label.textColor = .white
         label.preferredMaxLayoutWidth = width

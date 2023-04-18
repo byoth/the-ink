@@ -8,6 +8,7 @@
 import Foundation
 
 enum TaskModal: String {
+    case metaphor
     case productsAreMade
-    case natureCanBeRecovered
+    case natureCanBeRestored
 }

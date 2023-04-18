@@ -73,11 +73,11 @@ final class ScriptViewModel: ObservableObject {
     func gotoNextScript() {
         if isTypingAnimation() {
             displayingScript = getCurrentScript()
-        } else if !taskManager.isCurrentTaskLast() {
+        } else {
             if hasNextScript() {
                 displayingScript = ""
                 currentDisplayingScriptIndex += 1
-            } else if !isProgressing() || taskManager.isWaitingForNextTask() {
+            } else if (!isProgressing() || taskManager.isWaitingForNextTask()) && !taskManager.isCurrentTaskLast() {
                 taskManager.gotoNextTask()
             }
         }
@@ -87,14 +87,15 @@ final class ScriptViewModel: ObservableObject {
         if !taskManager.isWaitingForNextTask() {
             return scripts[safe: currentDisplayingScriptIndex] ?? ""
         } else {
-            return "Well done!"
+            return "Well done."
         }
     }
     
     func hasNextButton() -> Bool {
-        let hasNextScript = (hasNextScript() || !isProgressing())
-        let hasNextTask = !taskManager.isCurrentTaskLast()
-        return (hasNextScript && hasNextTask) || taskManager.isWaitingForNextTask()
+        if !hasNextScript() && taskManager.isCurrentTaskLast() {
+            return false
+        }
+        return (hasNextScript() || !isProgressing()) || taskManager.isWaitingForNextTask()
     }
     
     private func isTypingAnimation() -> Bool {

@@ -41,6 +41,9 @@ struct TaskListView: View {
         .sheet(isPresented: $viewModel.hasCurrentModal) {
             if let modal = viewModel.getCurrentModal() {
                 modalView(modal: modal)
+                    .onDisappear {
+                        viewModel.taskManager.gotoNextTask()
+                    }
             }
         }
     }
@@ -102,13 +105,12 @@ struct TaskListView: View {
     private func modalView(modal: TaskModal) -> some View {
         Group {
             switch modal {
+            case .metaphor:
+                MetaphorView()
             case .productsAreMade:
                 ProductsAreMadeView()
-                    .onDisappear {
-                        viewModel.taskManager.gotoNextTask()
-                    }
-            case .natureCanBeRecovered:
-                NatureCanBeRecoveredView()
+            case .natureCanBeRestored:
+                NatureCanBeRestoredView()
             }
         }
     }

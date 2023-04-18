@@ -18,7 +18,9 @@ final class TaskListViewModel: ObservableObject {
             guard currentProgressRate != oldValue else {
                 return
             }
-            updateCurrentModalIfNeeded()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.updateCurrentModalIfNeeded()
+            }
         }
     }
     @Published private var currentModal: TaskModal?
@@ -86,8 +88,6 @@ final class TaskListViewModel: ObservableObject {
         hasCurrentModal = true
         if task == .MakeProducts && isCurrentProgressCompleted() {
             currentModal = .productsAreMade
-        } else if task == .RecoverNature {
-            currentModal = .natureCanBeRecovered
         } else {
             currentModal = nil
             hasCurrentModal = false

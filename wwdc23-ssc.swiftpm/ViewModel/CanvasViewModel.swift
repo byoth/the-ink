@@ -80,7 +80,8 @@ final class CanvasViewModel: ObservableObject {
     
     func calculateSketching(size: CGSize) {
         let layers = getCurrentLayers()
-        guard let sketchedDrawing = layers.last?.pkDrawing,
+        guard !taskManager.isWaitingForNextTask(),
+              let sketchedDrawing = layers.last?.pkDrawing,
               let guidelineDrawing = layers.last(where: { $0.isGuideline() })?.pkDrawing else {
             return
         }
@@ -118,16 +119,16 @@ final class CanvasViewModel: ObservableObject {
         }
         let animal = FleeingAnimal(origin: origin)
         fleeingAnimals.append(animal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) { [weak self] in
-            self?.fleeingAnimals.removeAll { $0 === animal }
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
+            self.fleeingAnimals.removeAll { $0 === animal }
         }
     }
     
     func appendFlyingAnimal() {
         let animal = FlyingAnimal()
         flyingAnimals.append(animal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) { [weak self] in
-            self?.flyingAnimals.removeAll { $0 === animal }
+        DispatchQueue.main.asyncAfter(deadline: .now() + animal.duration) {
+            self.flyingAnimals.removeAll { $0 === animal }
         }
     }
     

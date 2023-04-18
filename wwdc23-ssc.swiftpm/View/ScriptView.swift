@@ -16,20 +16,21 @@ struct ScriptView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .bottomTrailing) {
-                Color.white
-                    .opacity(0.01)
+        ZStack(alignment: .bottomTrailing) {
+            Color.white
+                .opacity(0.01)
+            GeometryReader { geometry in
                 ScriptUIView(
                     text: viewModel.displayingScript,
                     width: geometry.size.width
                 )
-                if viewModel.hasNextButton() {
-                    BlinkingTriangle(sizeLength: 20, color: .white)
-                }
+            }
+            .padding(32)
+            if viewModel.hasNextButton() {
+                BlinkingTriangle(sizeLength: 20, color: .white)
+                    .padding(16)
             }
         }
-        .padding()
         .onTapGesture {
             viewModel.gotoNextScript()
         }
