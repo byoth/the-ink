@@ -25,8 +25,8 @@ struct NatureCanBeRestoredView: View {
                 VStack(spacing: 16) {
                     Text("We've the opportunity to restore nature.\nBut there is no such opportunity in reality.")
                     Text("Not all factories destroy nature,\nbut it's definitely happening somewhere.")
-                    Text("It's hard for us to live without products,\nbut at least please pay attention to how eco-friendly your products are made.")
-                    Text("Our efforts can be put together to prevent terrible things.")
+                    Text("It's hard for us to live without products,\nbut at least we can pay attention to the way eco-friendly products are made.")
+                    Text("Our efforts can be put together to prevent ecological catastrophe.")
                 }
                 .font(.system(size: 16, weight: .light))
                 .padding()

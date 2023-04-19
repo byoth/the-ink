@@ -33,7 +33,7 @@ struct ProductsAreMadeView: View {
             VStack(spacing: 24) {
                 Text("You've got the products!")
                     .font(.system(size: 32, weight: .bold))
-                Text("But···\nHave you noticed how many things are sacrificed for these?")
+                Text("But···\nHave you noticed how many things were sacrificed for these?")
                     .font(.system(size: 24, weight: .black))
             }
             .multilineTextAlignment(.center)
@@ -42,7 +42,7 @@ struct ProductsAreMadeView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("We made a big mistake for our needs.\nNature is destroyed. Animals left. We can no longer see a peaceful place.")
                 Text("Fortunately, we're in the game, so we can turn everything back from now on.")
-                Text("Unfortunately, humans are making same mistakes as us in the real world.\nAnd it's almost irreversible.")
+                Text("Unfortunately, humans are making same mistakes as we did in the real world.\nAnd this is almost irreversible.")
             }
             .font(.system(size: 16, weight: .light))
             .padding()
