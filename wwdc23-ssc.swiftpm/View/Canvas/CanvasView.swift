@@ -40,8 +40,8 @@ struct CanvasView: View {
                     ForEach(viewModel.flyingAnimals) { animal in
                         FlyingAnimalView(animal: animal, canvasSize: geometry.size)
                     }
-//                    blockingView()
-//                        .allowsHitTesting(isBlocked())
+                    blockingView()
+                        .allowsHitTesting(isBlocked())
                 }
                 .cornerRadius(24)
                 .shadow(radius: 16, y: 8)

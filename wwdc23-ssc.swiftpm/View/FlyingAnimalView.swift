@@ -27,7 +27,7 @@ struct FlyingAnimalView: View {
         .offset(x: x, y: canvasSize.height * animal.relativeY)
         .onAppear {
             withAnimation(.linear(duration: animal.duration)) {
-                x = canvasSize.width
+                x = canvasSize.width + Self.sizeLength
             }
             withAnimation(.easeInOut(duration: 1).repeatCount(3)) {
                 isFlying.toggle()
