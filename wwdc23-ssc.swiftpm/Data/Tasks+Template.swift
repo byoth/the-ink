@@ -51,11 +51,10 @@ extension Task {
         title: "Introduction",
         layers: [.nature],
         scripts: [
-            "Hello, Player!",
-            "This game simulates how to make some products we use.",
+            "Hello, Player!\n  \nThis game simulates how to make some products we use.",
             "You'll draw a few pictures of what we need to make products, following guidelines I'll provide.",
-            "But to draw in this game, you've to consume inks.\nAnd to get inks, you've to erase already drawn pictures.",
-            "This is the only rule this game has.\nSo let's give it a try."
+            "But to draw in this game, you've to consume inks.\n  \nAnd to get inks, you've to erase already drawn pictures.",
+            "This is the only rule this game has.\n  \nLet's play!"
         ]
     )
     
@@ -75,9 +74,9 @@ extension Task {
         title: "Fill the ink gauge",
         layers: [.emptyGuideline, .nature],
         scripts: [
-            "You'll build a factory by drawing.\nBut as you know, you need inks to do this.",
-            "So fill the ink gauge by erasing the natural elements like trees, pond, and sandy beach with the eraser tool.",
-            "You can always check the ink gauge at the bottom right."
+            "You'll draw a factory to make products.\n  \nBut as you know, you need inks to do this.",
+            "So fill the ink gauge by erasing the natural elements.\n  \nYou can use eraser tools.",
+            "And you can always check the ink gauge at the bottom right."
         ],
         progress: TaskProgress(
             title: "INK GAUGE",
@@ -92,10 +91,9 @@ extension Task {
         title: "Build a factory",
         layers: [.nature, .factoryGuideline, .forFactory],
         scripts: [
-            "Now you can build a factory because you got inks.",
-            "And it can be a metaphor for industries having to get resources and space from nature.",
-            "Anyway, it'll be built if you draw a factory tracing the sketch.",
-            "Please be sure to trace as accurately as possible."
+            "Now that you have inks, you can build a factory.",
+            "It'll be built if you draw a factory tracing the sketch.",
+            "Please draw it as accurately as possible."
         ],
         progress: TaskProgress(
             title: "BUILD RATE",
@@ -110,8 +108,9 @@ extension Task {
         title: "Make products",
         layers: [.nature, .forFactory, .pollutionGuideline, .forPollution],
         scripts: [
-            "Now you can run the factory.\nBut production causes air pollution, water pollution, and waste problems.",
-            "You should consider this.\nAs before, draw pollution tracing the sketch to make products."
+            "Now that you have a factory, you can make products.\n  \nBut production causes air pollution, water pollution, and waste problems.",
+            "You should consider this to make products.",
+            "As before, draw pollution tracing the sketch."
         ],
         progress: TaskProgress(
             title: "PRODUCTION RATE",
@@ -126,7 +125,7 @@ extension Task {
         title: "Remove the pollution",
         layers: [.nature, .forFactory, .emptyGuideline, .forPollution],
         scripts: [
-            "We've realized to should turn everything back.\nLet's restore nature!",
+            "We've realized to should turn everything back.\n  \nLet's restore nature!",
             "Please erase the pollution!"
         ],
         progress: TaskProgress(
@@ -157,10 +156,8 @@ extension Task {
         title: "Restore nature",
         layers: [.emptyGuideline, .forFreeDrawing],
         scripts: [
-            "Now you can draw freely a nature-friendly place as you like!",
-            "Not all factories destroy nature,\nBut the terrible things we've done are surely happening somewhere.",
-            "It is hard to live without products,\nBut we should pay attention to how eco-friendly our products are made.",
-            "Thank you for playing! 👍"
+            "Now you can draw freely a eco-friendly place as you like!",
+            "Thank you for playing 👍"
         ]
     )
 }
