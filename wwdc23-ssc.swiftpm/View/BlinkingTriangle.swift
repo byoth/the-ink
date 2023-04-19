@@ -19,7 +19,7 @@ struct BlinkingTriangle: View {
             path.addLine(to: CGPoint(x: 0, y: sizeLength))
         }
         .fill(color)
-        .opacity(isHidden ? 0 : 0.5)
+        .opacity(isHidden ? 0 : 1)
         .frame(width: sizeLength, height: sizeLength)
         .onAppear {
             withAnimation(.easeInOut(duration: 0.5).repeatForever()) {

@@ -16,7 +16,7 @@ struct ScriptView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
+        ZStack(alignment: .bottom) {
             Color.white
                 .opacity(0.01)
             GeometryReader { geometry in
@@ -26,10 +26,17 @@ struct ScriptView: View {
                 )
             }
             .padding(32)
-            if viewModel.hasNextButton() {
-                BlinkingTriangle(sizeLength: 20, color: .white)
-                    .padding(16)
+            HStack {
+                Text(viewModel.getPage())
+                    .foregroundColor(.white)
+                    .font(.caption)
+                Spacer()
+                if viewModel.hasNextButton() {
+                    BlinkingTriangle(sizeLength: 20, color: .white)
+                }
             }
+            .frame(height: 20)
+            .padding(16)
         }
         .onTapGesture {
             viewModel.gotoNextScript()

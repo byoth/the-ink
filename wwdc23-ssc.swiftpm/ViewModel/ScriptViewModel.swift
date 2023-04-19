@@ -97,9 +97,17 @@ final class ScriptViewModel: ObservableObject {
         }
     }
     
+    func getPage() -> String {
+        if !taskManager.isCurrentTaskCompleted {
+            return "\(currentDisplayingScriptIndex + 1) / \(scripts.count)"
+        } else {
+            return ""
+        }
+    }
+    
     func hasNextButton() -> Bool {
         guard taskManager.hasNextTask() else {
-            return false
+            return hasNextScript()
         }
         return hasNextScript() || !hasProgress() || taskManager.isCurrentTaskCompleted
     }

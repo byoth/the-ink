@@ -9,7 +9,7 @@ import Foundation
 
 final class TaskManager: ObservableObject {
     let sections: [TaskSection]
-    @Published var currentIndexes = (section: 0, task: 0) {
+    @Published private var currentIndexes = (section: 0, task: 0) {
         didSet {
             guard currentIndexes != oldValue else { return }
             currentProgressRate = 0

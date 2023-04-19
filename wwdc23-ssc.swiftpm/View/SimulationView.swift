@@ -47,7 +47,7 @@ struct SimulationView: View {
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 ScriptView(taskManager: viewModel.taskManager)
-                    .frame(height: 200)
+                    .frame(height: 240)
                 TaskListView(
                     taskManager: viewModel.taskManager,
                     resource: viewModel.resource,
