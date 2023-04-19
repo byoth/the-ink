@@ -15,8 +15,10 @@ struct ProductsAreMadeView: View {
             GeometryReader { geometry in
                 let iconSizeLength = geometry.size.height * (2 / 3)
                 ZStack(alignment: .bottom) {
-                    Color.gray
-                    Color.black
+                    Image("products")
+                        .resizable()
+                    Image("boxes")
+                        .resizable()
                         .offset(y: iconSizeLength / 2 - CGFloat(isItemFloating ? 20 : 0))
                         .frame(
                             width: iconSizeLength,
