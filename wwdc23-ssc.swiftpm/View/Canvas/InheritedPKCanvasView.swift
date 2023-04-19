@@ -8,9 +8,9 @@
 import PencilKit
 
 final class InheritedPKCanvasView: PKCanvasView {
-    override var undoManager: UndoManager? {
-        nil
-    }
+//    override var undoManager: UndoManager? {
+//        nil
+//    }
     weak var receiver: TouchEventReceivable?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

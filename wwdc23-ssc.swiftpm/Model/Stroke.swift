@@ -12,7 +12,7 @@ struct Stroke {
     let points: [StrokePoint]
 }
 
-extension Stroke: CompactCodable {
+extension Stroke {
     func getRawValue() -> String {
         let ink = ink.getRawValue()
         let points = points

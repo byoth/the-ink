@@ -11,7 +11,7 @@ struct Drawing {
     let strokes: [Stroke]
 }
 
-extension Drawing: CompactCodable {
+extension Drawing {
     func getRawValue() -> String {
         strokes
             .map { $0.getRawValue() }

@@ -32,7 +32,7 @@ struct ColorData {
     }
 }
 
-extension ColorData: CompactCodable {
+extension ColorData {
     func getRawValue() -> String {
         let components = [red, green, blue, alpha]
         return components

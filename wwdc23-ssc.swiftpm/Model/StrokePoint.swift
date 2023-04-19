@@ -17,7 +17,7 @@ struct StrokePoint {
     let altitude: CGFloat
 }
 
-extension StrokePoint: CompactCodable {
+extension StrokePoint {
     func getRawValue() -> String {
         let components = [relativeLocation.x, relativeLocation.y, timeOffset, relativeSize.width, relativeSize.height, opacity, force, azimuth, altitude]
             .map { String($0) }

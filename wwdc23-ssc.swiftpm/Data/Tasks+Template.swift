@@ -49,10 +49,10 @@ extension TaskSection {
 extension Task {
     static let Introduction = Task(
         title: "Introduction",
-        layers: [.nature],
+        layers: [.forFreeDrawing, .nature],
         scripts: [
             "Hello, Player!\n  \nThis game simulates how to make some products we use.",
-            "You'll draw a few pictures of what we need to make products, following guidelines I'll provide.",
+            "You'll draw a few pictures of what we need to make products,\nfollowing guidelines I'll provide.",
             "But to draw in this game, you've to consume inks.\n  \nAnd to get inks, you've to erase already drawn pictures.",
             "This is the only rule this game has.\n  \nLet's play!"
         ]
@@ -72,7 +72,7 @@ extension Task {
     
     static let FillInkGauge = Task(
         title: "Fill the ink gauge",
-        layers: [.emptyGuideline, .nature],
+        layers: [.forFreeDrawing, .emptyGuideline, .nature],
         scripts: [
             "You'll draw a factory to make products.\n  \nBut as you know, you need inks to do this.",
             "So fill the ink gauge by erasing the natural elements.\n  \nYou can use eraser tools.",
@@ -89,7 +89,7 @@ extension Task {
     
     static let BuildFactory = Task(
         title: "Build a factory",
-        layers: [.nature, .factoryGuideline, .forFactory],
+        layers: [.forFreeDrawing, .nature, .factoryGuideline, .forFactory],
         scripts: [
             "Now that you have inks, you can build a factory.",
             "It'll be built if you draw a factory tracing the sketch.",
@@ -106,7 +106,7 @@ extension Task {
     
     static let MakeProducts = Task(
         title: "Make products",
-        layers: [.nature, .forFactory, .pollutionGuideline, .forPollution],
+        layers: [.forFreeDrawing, .nature, .forFactory, .pollutionGuideline, .forPollution],
         scripts: [
             "Now that you have a factory, you can make products.\n  \nBut production causes air pollution, water pollution, and waste problems.",
             "You should consider this to make products.",
@@ -123,7 +123,7 @@ extension Task {
     
     static let RemovePollution = Task(
         title: "Remove the pollution",
-        layers: [.nature, .forFactory, .emptyGuideline, .forPollution],
+        layers: [.forFreeDrawing, .nature, .forFactory, .emptyGuideline, .forPollution],
         scripts: [
             "We've realized to should turn everything back.\n  \nLet's restore nature!",
             "Please erase the pollution!"
@@ -139,7 +139,7 @@ extension Task {
     
     static let RemoveFactory = Task(
         title: "Remove the factory",
-        layers: [.nature, .forPollution, .emptyGuideline, .forFactory],
+        layers: [.forFreeDrawing, .nature, .forPollution, .emptyGuideline, .forFactory],
         scripts: [
             "Please erase the factory, too!"
         ],
@@ -154,7 +154,7 @@ extension Task {
     
     static let RestoreNature = Task(
         title: "Restore nature",
-        layers: [.emptyGuideline, .forFreeDrawing],
+        layers: [.forFreeDrawing, .emptyGuideline, .forFreeDrawing],
         scripts: [
             "Now you can draw freely a eco-friendly place as you like!",
             "Thank you for playing 👍"

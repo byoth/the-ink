@@ -28,6 +28,9 @@ struct CanvasLayerView: View {
     var body: some View {
         GeometryReader { geometry in
             CanvasUIView(canvasView: $canvasView, receiver: receiver)
+                .onLongPressGesture {
+                    print("@LOG canvas \(canvasView.drawing.getPointsCount()) \(Drawing.build(pkDrawing: canvasView.drawing, canvasSize: geometry.size).getRawValue()) \(canvasView.drawing.getPointsCount())")
+                }
                 .onAppear {
                     applyDrawing(size: geometry.size)
                 }

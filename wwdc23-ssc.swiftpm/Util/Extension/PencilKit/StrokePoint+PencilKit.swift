@@ -29,13 +29,13 @@ extension StrokePoint {
     static func build(pkStrokePoint: PKStrokePoint, canvasSize: CGSize) -> Self {
         StrokePoint(
             relativeLocation: CGPoint(
-                x: (pkStrokePoint.location.x / canvasSize.width).decimalRounded(),
-                y: (pkStrokePoint.location.y / canvasSize.height).decimalRounded()
+                x: (pkStrokePoint.location.x / canvasSize.width).decimalRounded(4),
+                y: (pkStrokePoint.location.y / canvasSize.height).decimalRounded(4)
             ),
-            timeOffset: pkStrokePoint.timeOffset.decimalRounded(),
+            timeOffset: pkStrokePoint.timeOffset.decimalRounded(1),
             relativeSize: CGSize(
-                width: (pkStrokePoint.size.width / canvasSize.width).decimalRounded(),
-                height: (pkStrokePoint.size.height / canvasSize.height).decimalRounded()
+                width: (pkStrokePoint.size.width / canvasSize.width).decimalRounded(4),
+                height: (pkStrokePoint.size.height / canvasSize.height).decimalRounded(4)
             ),
             opacity: pkStrokePoint.opacity.decimalRounded(),
             force: pkStrokePoint.force.decimalRounded(),

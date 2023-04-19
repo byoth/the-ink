@@ -18,7 +18,7 @@ struct Ink {
     }
 }
 
-extension Ink: CompactCodable {
+extension Ink {
     func getRawValue() -> String {
         let components = [inkType.rawValue, color.getRawValue()]
         return components

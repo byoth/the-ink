@@ -12,7 +12,6 @@ enum CanvasLayerType: String, CaseIterable {
     case forFactory
     case forPollution
     case forFreeDrawing
-    case constructionSiteGuideline
     case factoryGuideline
     case pollutionGuideline
     case emptyGuideline
@@ -26,9 +25,7 @@ enum CanvasLayerType: String, CaseIterable {
         case .forPollution:
             return .empty
         case .forFreeDrawing:
-            return .empty
-        case .constructionSiteGuideline:
-            return .constructionSiteGuideline
+            return .traces
         case .factoryGuideline:
             return .factoryGuideline
         case .pollutionGuideline:
@@ -40,7 +37,7 @@ enum CanvasLayerType: String, CaseIterable {
     
     func isGuideline() -> Bool {
         switch self {
-        case .constructionSiteGuideline, .factoryGuideline, .pollutionGuideline, .emptyGuideline:
+        case .factoryGuideline, .pollutionGuideline, .emptyGuideline:
             return true
         default:
             return false
