@@ -23,6 +23,8 @@ final class SketchingCalculator {
         self.tolerance = tolerance
     }
     
+    // MARK: - Behavior
+    
     func updatePixelsExistence(size: CGSize, sketchedDrawing: PKDrawing, guidelineDrawing: PKDrawing) {
         guard size != .zero else {
             return
@@ -37,6 +39,17 @@ final class SketchingCalculator {
         }
     }
     
+    // MARK: - Public Getter
+    
+    func getAccuracy() -> CGFloat {
+        guard let originalSimilarity = originalSimilarity,
+              originalSimilarity < 1 else {
+            return 0
+        }
+        let accuracy = (getSimilarity() - originalSimilarity) / (1 - originalSimilarity)
+        return accuracy.isNormal ? accuracy * tolerance : 0
+    }
+    
     func getJustChangedPixels() -> Int {
         guard !lastSketchedPixelsExistence.isEmpty else {
             return 0
@@ -48,14 +61,7 @@ final class SketchingCalculator {
         Int(CGFloat(sketchedPixelsExistence.filter { $0 }.count) / tolerance)
     }
     
-    func getAccuracy() -> CGFloat {
-        guard let originalSimilarity = originalSimilarity,
-              originalSimilarity < 1 else {
-            return 0
-        }
-        let accuracy = (getSimilarity() - originalSimilarity) / (1 - originalSimilarity)
-        return accuracy.isNormal ? accuracy * tolerance : 0
-    }
+    // MARK: - Private Getter
     
     private func isFirstComparing() -> Bool {
         originalSimilarity == nil

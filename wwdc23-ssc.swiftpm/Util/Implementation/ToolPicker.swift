@@ -17,11 +17,15 @@ final class ToolPicker: NSObject, ObservableObject {
         toolPicker.addObserver(self)
     }
     
+    // MARK: - Behavior
+    
     func connectCanvasView(_ canvasView: PKCanvasView) {
         toolPicker.addObserver(canvasView)
         toolPicker.setVisible(true, forFirstResponder: canvasView)
         canvasView.becomeFirstResponder()
     }
+    
+    // MARK: - Public Getter
     
     func getTool() -> PKTool {
         toolPicker.selectedTool

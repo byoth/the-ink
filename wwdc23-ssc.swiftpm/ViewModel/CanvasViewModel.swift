@@ -40,6 +40,8 @@ final class CanvasViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Behavior
+    
     private func subscribeObjects() {
         Publishers
             .Merge3(
@@ -56,7 +58,9 @@ final class CanvasViewModel: ObservableObject {
         
         taskManager.objectWillChange
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .sink { [weak self] in
+            .map { self.taskManager.getCurrentTask() }
+            .removeDuplicates()
+            .sink { [weak self] _ in
                 self?.setupSketchingCalculator()
             }
             .store(in: &cancellables)
@@ -80,7 +84,7 @@ final class CanvasViewModel: ObservableObject {
     
     func calculateSketching(size: CGSize) {
         let layers = getCurrentLayers()
-        guard !taskManager.isWaitingForNextTask(),
+        guard !taskManager.isCurrentTaskCompleted,
               let sketchedDrawing = layers.last?.pkDrawing,
               let guidelineDrawing = layers.last(where: { $0.isGuideline() })?.pkDrawing else {
             return
@@ -96,7 +100,7 @@ final class CanvasViewModel: ObservableObject {
         guard let calculator = calculator else {
             return
         }
-        let amount = resource.getAmount() - calculator.getJustChangedPixels()
+        let amount = resource.amount - calculator.getJustChangedPixels()
         let maxAmount = calculator.getOriginalSketchedPixels()
         DispatchQueue.main.async {
             self.resource.setAmount(amount, maxAmount: maxAmount)
@@ -109,7 +113,7 @@ final class CanvasViewModel: ObservableObject {
         }
         let accuracy = calculator.getAccuracy()
         DispatchQueue.main.async {
-            self.progress.setAccuracy(accuracy)
+            self.progress.accuracy = accuracy
         }
     }
     
@@ -132,6 +136,8 @@ final class CanvasViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Public Getter
+    
     func getCurrentLayers() -> [CanvasLayer] {
         taskManager.getCurrentTask()?.layers
             .compactMap { type in
@@ -144,8 +150,10 @@ final class CanvasViewModel: ObservableObject {
     }
     
     func isSketchable() -> Bool {
-        taskManager.getCurrentSection()?.isSketchable == true && !taskManager.isWaitingForNextTask()
+        taskManager.getCurrentSection()?.isSketchable == true && !taskManager.isCurrentTaskCompleted
     }
+    
+    // MARK: - Private Getter
     
     private func isErasing() -> Bool {
         toolPicker.getTool() is PKEraserTool

@@ -39,7 +39,7 @@ struct TaskListView: View {
             value: viewModel.taskManager.getCurrentTask()
         )
         .sheet(isPresented: $viewModel.hasCurrentModal) {
-            if let modal = viewModel.getCurrentModal() {
+            if let modal = viewModel.taskManager.currentModal {
                 modalView(modal: modal)
                     .onDisappear {
                         viewModel.taskManager.gotoNextTask()
@@ -83,16 +83,17 @@ struct TaskListView: View {
     
     private func progressView(progress: TaskProgress) -> some View {
         VStack(alignment: .leading, spacing: 4) {
+            let rate = viewModel.taskManager.currentProgressRate
             Text(progress.title)
                 .foregroundColor(.gray)
                 .font(.caption)
             GeometryReader { geometry in
                 RoundedRectangle(cornerRadius: 4)
                     .fill(Color.orange)
-                    .frame(width: geometry.size.width * viewModel.getCurrentProgressRate())
+                    .frame(width: geometry.size.width * rate)
                     .animation(
                         .interactiveSpring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.5),
-                        value: viewModel.getCurrentProgressRate()
+                        value: rate
                     )
             }
             .background(Color.black.opacity(0.1))

@@ -12,18 +12,7 @@ final class TaskListViewModel: ObservableObject {
     let taskManager: TaskManager
     let resource: SketchingResource
     let progress: SketchingProgress
-    @Published private var sections: [TaskSection]
-    @Published private var currentProgressRate = CGFloat(0) {
-        didSet {
-            guard currentProgressRate != oldValue else {
-                return
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.updateCurrentModalIfNeeded()
-            }
-        }
-    }
-    @Published private var currentModal: TaskModal?
+    let sections: [TaskSection]
     @Published var hasCurrentModal = false
     private var cancellables = Set<AnyCancellable>()
     
@@ -33,91 +22,44 @@ final class TaskListViewModel: ObservableObject {
         self.taskManager = taskManager
         self.resource = resource
         self.progress = progress
-        self.sections = taskManager.getSections()
-        subscribeObjects()
+        self.sections = taskManager.sections
+        subscribeTaskManager()
     }
     
-    private func subscribeObjects() {
-        subscribeTaskManager()
-        subscribeObjectForGauge(object: resource)
-        subscribeObjectForGauge(object: progress)
-    }
+    // MARK: - Behavior
     
     private func subscribeTaskManager() {
-        sections = taskManager.sections
+        taskManager.objectWillChange
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
         
         taskManager.objectWillChange
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .map { self.taskManager.getCurrentTask() }
+            .map { self.taskManager.currentModal }
             .removeDuplicates()
+            .map { $0 != nil }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.currentProgressRate = 0
+            .sink { [weak self] in
+                self?.hasCurrentModal = $0
             }
             .store(in: &cancellables)
     }
     
-    private func subscribeObjectForGauge<O: ObservableObject & Gaugeable>(object: O) {
-        object.objectWillChange
-            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .map { _ in object.getPercentage() }
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.updateGauge(object: object)
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func updateGauge(object: Gaugeable) {
-        guard let progress = taskManager.getCurrentTask()?.progress,
-              progress.gaugeType == type(of: object) else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.currentProgressRate = object.getRate()
-        }
-        if object.isFull() {
-            taskManager.waitForNextTask()
-        }
-    }
-    
-    private func updateCurrentModalIfNeeded() {
-        guard let task = taskManager.getCurrentTask() else {
-            return
-        }
-        hasCurrentModal = true
-        if task == .MakeProducts && isCurrentProgressCompleted() {
-            currentModal = .productsAreMade
-        } else {
-            currentModal = nil
-            hasCurrentModal = false
-        }
-    }
+    // MARK: - Public Getter
     
     func isCompleted(section: TaskSection, task: Task) -> Bool {
         let isSectionCompleted = taskManager.isCompleted(section: section)
         let isTaskCompleted = (!task.isSkippable() && taskManager.isCompleted(task: task))
-        let isProgressCompleted = taskManager.getCurrentTask() == task && isCurrentProgressCompleted()
+        let isProgressCompleted = taskManager.getCurrentTask() == task && taskManager.isCurrentProgressCompleted()
         return isSectionCompleted || isTaskCompleted || isProgressCompleted
     }
     
     func getSections() -> [TaskSection] {
-        taskManager.getSections()
+        taskManager.sections
             .filter { $0.isShownInList }
-    }
-    
-    func getCurrentProgressRate() -> CGFloat {
-        guard !taskManager.isWaitingForNextTask() else {
-            return 1
-        }
-        return currentProgressRate
-    }
-    
-    func getCurrentModal() -> TaskModal? {
-        currentModal
-    }
-    
-    private func isCurrentProgressCompleted() -> Bool {
-        currentProgressRate >= 1
     }
 }

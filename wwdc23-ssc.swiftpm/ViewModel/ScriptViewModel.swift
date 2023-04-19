@@ -10,9 +10,9 @@ import Combine
 
 final class ScriptViewModel: ObservableObject {
     let taskManager: TaskManager
+    @Published var displayingScript = ""
     @Published private var scripts: [String]
     @Published private var currentDisplayingScriptIndex = 0
-    @Published var displayingScript = ""
     private var cancellables = Set<AnyCancellable>()
     
     init(taskManager: TaskManager) {
@@ -21,6 +21,8 @@ final class ScriptViewModel: ObservableObject {
         subscribeTaskScripts()
         applyTypingAnimation()
     }
+    
+    // MARK: - Behavior
     
     private func subscribeTaskScripts() {
         taskManager.objectWillChange
@@ -36,7 +38,7 @@ final class ScriptViewModel: ObservableObject {
         
         taskManager.objectWillChange
             .debounce(for: .milliseconds(100), scheduler: DispatchQueue.global(qos: .userInteractive))
-            .map { self.taskManager.isWaitingForNextTask() }
+            .map { self.taskManager.isCurrentTaskCompleted }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
@@ -55,11 +57,11 @@ final class ScriptViewModel: ObservableObject {
     
     private func applyTypingAnimation() {
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
-            self?.typeScript()
+            self?.typeNextLetterInScript()
         }
     }
     
-    private func typeScript() {
+    private func typeNextLetterInScript() {
         guard isTypingAnimation() else {
             return
         }
@@ -73,18 +75,22 @@ final class ScriptViewModel: ObservableObject {
     func gotoNextScript() {
         if isTypingAnimation() {
             displayingScript = getCurrentScript()
-        } else {
-            if hasNextScript() {
-                displayingScript = ""
-                currentDisplayingScriptIndex += 1
-            } else if (!isProgressing() || taskManager.isWaitingForNextTask()) && !taskManager.isCurrentTaskLast() {
+        } else if hasNextScript() {
+            displayingScript = ""
+            currentDisplayingScriptIndex += 1
+        } else if taskManager.isCurrentTaskCompleted || !hasProgress() {
+            if let modal = taskManager.getAvailableModal() {
+                taskManager.showModal(modal)
+            } else {
                 taskManager.gotoNextTask()
             }
         }
     }
     
+    // MARK: - Public Getter
+    
     func getCurrentScript() -> String {
-        if !taskManager.isWaitingForNextTask() {
+        if !taskManager.isCurrentTaskCompleted {
             return scripts[safe: currentDisplayingScriptIndex] ?? ""
         } else {
             return "Well done."
@@ -92,11 +98,13 @@ final class ScriptViewModel: ObservableObject {
     }
     
     func hasNextButton() -> Bool {
-        if !hasNextScript() && taskManager.isCurrentTaskLast() {
+        guard taskManager.hasNextTask() else {
             return false
         }
-        return (hasNextScript() || !isProgressing()) || taskManager.isWaitingForNextTask()
+        return hasNextScript() || !hasProgress() || taskManager.isCurrentTaskCompleted
     }
+    
+    // MARK: - Private Getter
     
     private func isTypingAnimation() -> Bool {
         displayingScript != getCurrentScript()
@@ -106,7 +114,7 @@ final class ScriptViewModel: ObservableObject {
         currentDisplayingScriptIndex < scripts.count - 1
     }
     
-    private func isProgressing() -> Bool {
+    private func hasProgress() -> Bool {
         taskManager.getCurrentTask()?.progress != nil
     }
 }

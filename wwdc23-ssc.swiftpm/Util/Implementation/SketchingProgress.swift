@@ -8,13 +8,9 @@
 import Foundation
 
 final class SketchingProgress: ObservableObject, Gaugeable {
-    @Published private var accuracy: CGFloat
+    @Published var accuracy: CGFloat
     
     init(accuracy: CGFloat = 0) {
-        self.accuracy = accuracy
-    }
-    
-    func setAccuracy(_ accuracy: CGFloat) {
         self.accuracy = accuracy
     }
     

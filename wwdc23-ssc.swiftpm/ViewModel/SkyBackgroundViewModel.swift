@@ -24,6 +24,8 @@ final class SkyBackgroundViewModel: ObservableObject {
         subscribeObjects()
     }
     
+    // MARK: - Behavior
+    
     private func subscribeObjects() {
         subscribeObjectForColor(object: resource)
         subscribeObjectForColor(object: progress)
@@ -41,7 +43,7 @@ final class SkyBackgroundViewModel: ObservableObject {
     }
     
     private func updateRGB(object: Gaugeable) {
-        guard !taskManager.isWaitingForNextTask(),
+        guard !taskManager.isCurrentTaskCompleted,
               let progress = taskManager.getCurrentTask()?.progress,
               progress.gaugeType == type(of: object) else {
             return
@@ -58,9 +60,7 @@ final class SkyBackgroundViewModel: ObservableObject {
         }
     }
     
-    func getRGB() -> RGB? {
-        rgb
-    }
+    // MARK: - Private Getter
     
     private static func getCalculatedValue(starting: Int, ending: Int, factor: CGFloat) -> Int {
         starting + Int(CGFloat(ending - starting) * factor)

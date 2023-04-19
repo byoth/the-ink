@@ -27,7 +27,7 @@ struct SkyBackgroundView: View {
     }
     
     private func getRGB() -> (CGFloat, CGFloat, CGFloat) {
-        let rgb = viewModel.getRGB() ?? SkyRGB.first
+        let rgb = viewModel.rgb ?? SkyRGB.first
         return (CGFloat(rgb.0) / 255, CGFloat(rgb.1) / 255, CGFloat(rgb.2) / 255)
     }
 }

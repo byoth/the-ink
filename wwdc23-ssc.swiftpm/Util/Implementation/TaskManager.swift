@@ -9,79 +9,113 @@ import Foundation
 
 final class TaskManager: ObservableObject {
     let sections: [TaskSection]
-    @Published private var isWaiting = false
-    @Published private var currentSectionIndex = 0
-    @Published private var currentTaskIndex = 0
+    @Published var currentIndexes = (section: 0, task: 0) {
+        didSet {
+            guard currentIndexes != oldValue else { return }
+            currentProgressRate = 0
+            isCurrentTaskCompleted = false
+            currentModal = nil
+        }
+    }
+    @Published var currentProgressRate = CGFloat(0)
+    @Published var isCurrentTaskCompleted = false
+    @Published var currentModal: TaskModal?
     
     init(sections: [TaskSection] = [.Introduction, .GetResources, .MakeProducts, .TurnEverythingBack]) {
         self.sections = sections
     }
     
+    // MARK: - Behavior
+    
     func gotoNextTask() {
-        let currentSectionTasks = sections[safe: currentSectionIndex]?.tasks ?? []
-        if currentTaskIndex < currentSectionTasks.count - 1 {
-            currentTaskIndex += 1
-        } else if currentSectionIndex < sections.count {
-            currentSectionIndex += 1
-            currentTaskIndex = 0
+        guard hasNextTask() else {
+            return
+        }
+        if currentIndexes.task < (sections[safe: currentIndexes.section]?.tasks ?? []).count - 1 {
+            currentIndexes.task += 1
+        } else if currentIndexes.section < sections.count {
+            currentIndexes.section += 1
+            currentIndexes.task = 0
         }
         if getCurrentTask()?.isSkippable() == true {
             gotoNextTask()
-        } else {
-            isWaiting = false
         }
     }
     
-    func waitForNextTask() {
-        isWaiting = true
+    func showModal(_ modal: TaskModal) {
+        currentModal = modal
     }
     
-    func isHidden(section: TaskSection) -> Bool {
-        getSectionIndex(section: section) > currentSectionIndex
+    func completeCurrentTask() {
+        isCurrentTaskCompleted = true
     }
     
-    func isActive(section: TaskSection, task: Task) -> Bool {
-        getSectionIndex(section: section) == currentSectionIndex && getTaskIndex(task: task) == currentTaskIndex
-    }
+    // MARK: - Public Getter
     
-    func isCompleted(section: TaskSection) -> Bool {
-        getSectionIndex(section: section) < currentSectionIndex
-    }
-    
-    func isCompleted(task: Task) -> Bool {
-        getTaskIndex(task: task) < currentTaskIndex
-    }
-    
-    func isCurrentTaskLast() -> Bool {
+    func hasNextTask() -> Bool {
         guard let task = getCurrentTask() else {
             return false
         }
-        return isLast(task: task)
-    }
-    
-    func isLast(task: Task) -> Bool {
-        task == sections.last?.tasks.last
-    }
-    
-    func isWaitingForNextTask() -> Bool {
-        isWaiting
+        return !isLast(task: task)
     }
     
     func canAnimalBeFleeing() -> Bool {
         getCurrentSection()?.canAnimalBeFleeing == true
     }
     
-    func getSections() -> [TaskSection] {
-        sections
+    func isCurrentProgressCompleted() -> Bool {
+        currentProgressRate >= 1
+    }
+    
+    func hasCurrentModal() -> Bool {
+        currentModal != nil
+    }
+    
+    func isHidden(section: TaskSection) -> Bool {
+        getSectionIndex(section: section) > currentIndexes.section
+    }
+    
+    func isActive(section: TaskSection, task: Task) -> Bool {
+        getSectionIndex(section: section) == currentIndexes.section && getTaskIndex(task: task) == currentIndexes.task
+    }
+    
+    func isCompleted(section: TaskSection) -> Bool {
+        getSectionIndex(section: section) < currentIndexes.section
+    }
+    
+    func isCompleted(task: Task) -> Bool {
+        getTaskIndex(task: task) < currentIndexes.task
+    }
+    
+    func isLast(task: Task) -> Bool {
+        task == sections.last?.tasks.last
     }
     
     func getCurrentSection() -> TaskSection? {
-        sections[safe: currentSectionIndex]
+        sections[safe: currentIndexes.section]
     }
     
     func getCurrentTask() -> Task? {
-        getCurrentSection()?.tasks[safe: currentTaskIndex]
+        getCurrentSection()?.tasks[safe: currentIndexes.task]
     }
+    
+    func getAvailableModal() -> TaskModal? {
+        guard let task = getCurrentTask() else {
+            return nil
+        }
+        switch task {
+        case .FillInkGauge:
+            return .metaphor
+        case .MakeProducts:
+            return .productsAreMade
+        case .RemoveFactory:
+            return .natureCanBeRestored
+        default:
+            return nil
+        }
+    }
+    
+    // MARK: - Private Getter
     
     private func getSectionIndex(section: TaskSection) -> Int {
         sections
