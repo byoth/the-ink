@@ -15,6 +15,7 @@ final class CanvasViewModel: ObservableObject {
     let progress: SketchingProgress
     let taskManager: TaskManager
     let receiver: CanvasSketchingReceiver
+    let isIntroduction: Bool
     private var calculator: SketchingCalculator?
     @Published var fleeingAnimals: [FleeingAnimal] = []
     @Published var flyingAnimals: [FlyingAnimal] = []
@@ -33,6 +34,7 @@ final class CanvasViewModel: ObservableObject {
         self.progress = progress
         self.taskManager = taskManager
         self.receiver = receiver
+        self.isIntroduction = isIntroduction
         receiver.viewModel = self
         subscribeObjects()
         if isIntroduction {
@@ -143,6 +145,13 @@ final class CanvasViewModel: ObservableObject {
             .compactMap { type in
                 allLayers.first { $0.type == type }
             } ?? []
+    }
+    
+    func getBlockingToastMessage() -> String? {
+        if isCanvasBlocked() {
+            return "Needs to fill the ink gauge"
+        }
+        return nil
     }
     
     func isCanvasBlocked() -> Bool {

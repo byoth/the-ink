@@ -40,9 +40,8 @@ struct CanvasView: View {
                     ForEach(viewModel.flyingAnimals) { animal in
                         FlyingAnimalView(animal: animal, canvasSize: geometry.size)
                     }
-                    if viewModel.isCanvasBlocked() || !viewModel.isSketchable() {
-                        blockingView()
-                    }
+                    blockingView()
+                        .allowsHitTesting(isBlocked())
                 }
                 .cornerRadius(24)
                 .shadow(radius: 16, y: 8)
@@ -80,25 +79,37 @@ struct CanvasView: View {
     private func blockingView() -> some View {
         ZStack {
             Color.white
-                .opacity(0.01)
-            
+                .opacity(isAvailable() ? 0.01 : 0.5)
+                .animation(.easeInOut(duration: 0.5), value: isAvailable())
             if viewModel.isCanvasBlocked() {
-                Text("Needs to fill the ink gauge!")
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-                    .padding()
-                    .background(
-                        .black.opacity(0.5),
-                        in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    )
-                    .opacity(isBlockingMessageHidden ? 0 : 1)
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 1).repeatForever()) {
-                            isBlockingMessageHidden.toggle()
-                        }
-                    }
+                blockingToastView()
             }
         }
+    }
+    
+    private func blockingToastView() -> some View {
+        Text("Fill the ink gauge first!")
+            .foregroundColor(.white)
+            .multilineTextAlignment(.center)
+            .padding()
+            .background(
+                .black.opacity(0.5),
+                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+            )
+            .opacity(isBlockingMessageHidden ? 0 : 1)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1).repeatForever()) {
+                    isBlockingMessageHidden.toggle()
+                }
+            }
+    }
+    
+    private func isBlocked() -> Bool {
+        viewModel.isCanvasBlocked() || !viewModel.isSketchable()
+    }
+    
+    private func isAvailable() -> Bool {
+        viewModel.isSketchable() || viewModel.isIntroduction
     }
 }
 
