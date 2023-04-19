@@ -8,11 +8,41 @@
 import SwiftUI
 
 struct NatureCanBeRestoredView: View {
+    @State private var isShown = false
+    
     var body: some View {
-        Text("Nature Can Be Restored!")
-            .onAppear {
-                AudioPlayer.shared.play("weap")
+        ZStack {
+            Image("restore")
+                .resizable()
+                .scaledToFill()
+            
+            VStack {
+                Text("Nature can be restored!")
+                    .font(.system(size: 32, weight: .bold))
+                    .padding()
+                    .offset(y: isShown ? 0 : -40)
+                
+                VStack(spacing: 16) {
+                    Text("We've the opportunity to restore nature.\nBut there is no such opportunity in reality.")
+                    Text("Not all factories destroy nature,\nbut it's definitely happening somewhere.")
+                    Text("It's hard for us to live without products,\nbut at least please pay attention to how eco-friendly your products are made.")
+                    Text("Our efforts can be put together to prevent terrible things.")
+                }
+                .font(.system(size: 16, weight: .light))
+                .padding()
+                .offset(y: isShown ? 0 : 40)
             }
+        }
+        .opacity(isShown ? 1 : 0)
+        .foregroundColor(.white)
+        .multilineTextAlignment(.center)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        .onAppear {
+            AudioPlayer.shared.play("peaceful")
+            withAnimation(.easeOut(duration: 3)) {
+                isShown = true
+            }
+        }
     }
 }
 

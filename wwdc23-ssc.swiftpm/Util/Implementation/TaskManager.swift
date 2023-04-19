@@ -15,9 +15,6 @@ final class TaskManager: ObservableObject {
             currentProgressRate = 0
             isCurrentTaskCompleted = false
             currentModal = nil
-            if !hasNextTask() {
-                showEndingEffect()
-            }
         }
     }
     @Published var currentProgressRate = CGFloat(0)
@@ -52,10 +49,6 @@ final class TaskManager: ObservableObject {
     func completeCurrentTask() {
         isCurrentTaskCompleted = true
         AudioPlayer.shared.play("complete")
-    }
-    
-    private func showEndingEffect() {
-        AudioPlayer.shared.play("peaceful")
     }
     
     // MARK: - Public Getter
