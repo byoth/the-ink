@@ -8,27 +8,28 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "wwdc23-ssc",
+    name: "The Ink",
     platforms: [
         .iOS("16.0")
     ],
     products: [
         .iOSApplication(
-            name: "wwdc23-ssc",
+            name: "The Ink",
             targets: ["AppModule"],
             bundleIdentifier: "byo.wwdc23-ssc",
             teamIdentifier: "3BWEDXDT2H",
             displayVersion: "1.0",
             bundleVersion: "1",
-            appIcon: .placeholder(icon: .sun),
-            accentColor: .presetColor(.indigo),
+            appIcon: .asset("AppIcon"),
+            accentColor: .presetColor(.blue),
             supportedDeviceFamilies: [
-                .pad,
+                .pad
             ],
             supportedInterfaceOrientations: [
                 .landscapeRight,
                 .landscapeLeft
-            ]
+            ],
+            appCategory: .simulationGames
         )
     ],
     targets: [
