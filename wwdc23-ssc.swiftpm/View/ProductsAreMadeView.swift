@@ -49,6 +49,7 @@ struct ProductsAreMadeView: View {
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .onAppear {
+            AudioPlayer.shared.play("machine")
             withAnimation(.easeInOut(duration: 1).repeatForever()) {
                 isItemFloating.toggle()
             }

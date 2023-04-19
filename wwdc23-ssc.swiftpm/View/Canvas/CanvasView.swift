@@ -53,6 +53,9 @@ struct CanvasView: View {
             }
         }
         .aspectRatio(1 / 1, contentMode: .fit)
+        .onAppear {
+            AudioPlayer.shared.play("birds")
+        }
     }
     
     private func backgroundView() -> some View {

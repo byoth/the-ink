@@ -10,6 +10,9 @@ import SwiftUI
 struct MetaphorView: View {
     var body: some View {
         Text("Metaphor")
+            .onAppear {
+                AudioPlayer.shared.play("weap")
+            }
     }
 }
 

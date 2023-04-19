@@ -15,6 +15,9 @@ final class TaskManager: ObservableObject {
             currentProgressRate = 0
             isCurrentTaskCompleted = false
             currentModal = nil
+            if !hasNextTask() {
+                showEndingEffect()
+            }
         }
     }
     @Published var currentProgressRate = CGFloat(0)
@@ -48,15 +51,17 @@ final class TaskManager: ObservableObject {
     
     func completeCurrentTask() {
         isCurrentTaskCompleted = true
+        AudioPlayer.shared.play("complete")
+    }
+    
+    private func showEndingEffect() {
+        AudioPlayer.shared.play("peaceful")
     }
     
     // MARK: - Public Getter
     
     func hasNextTask() -> Bool {
-        guard let task = getCurrentTask() else {
-            return false
-        }
-        return !isLast(task: task)
+        !isLast(task: getCurrentTask())
     }
     
     func canAnimalBeFleeing() -> Bool {
@@ -87,7 +92,7 @@ final class TaskManager: ObservableObject {
         getTaskIndex(task: task) < currentIndexes.task
     }
     
-    func isLast(task: Task) -> Bool {
+    func isLast(task: Task?) -> Bool {
         task == sections.last?.tasks.last
     }
     

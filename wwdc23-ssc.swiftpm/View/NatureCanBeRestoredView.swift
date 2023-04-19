@@ -10,6 +10,9 @@ import SwiftUI
 struct NatureCanBeRestoredView: View {
     var body: some View {
         Text("Nature Can Be Restored!")
+            .onAppear {
+                AudioPlayer.shared.play("weap")
+            }
     }
 }
 
