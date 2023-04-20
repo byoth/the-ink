@@ -41,7 +41,6 @@ struct CanvasView: View {
                         FlyingAnimalView(animal: animal, canvasSize: geometry.size)
                     }
                     blockingView()
-                        .allowsHitTesting(isBlocked())
                 }
                 .cornerRadius(24)
                 .shadow(radius: 16, y: 8)
@@ -78,13 +77,14 @@ struct CanvasView: View {
     
     private func blockingView() -> some View {
         ZStack {
-            Color.white
+            Color.black
                 .opacity(isAvailable() ? 0.01 : 0.5)
                 .animation(.easeInOut(duration: 0.5), value: isAvailable())
             if viewModel.isCanvasBlocked() {
                 blockingToastView()
             }
         }
+        .allowsHitTesting(isBlocked())
     }
     
     private func blockingToastView() -> some View {

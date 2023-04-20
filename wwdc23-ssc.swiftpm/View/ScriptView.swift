@@ -26,16 +26,15 @@ struct ScriptView: View {
                 )
             }
             .padding(32)
-            HStack {
+            HStack(alignment: .bottom) {
                 Text(viewModel.getPage())
                     .foregroundColor(.white)
                     .font(.caption)
                 Spacer()
                 if viewModel.hasNextButton() {
-                    BlinkingTriangle(sizeLength: 20, color: .white)
+                    BlinkingTriangle(sizeLength: 24, color: .white)
                 }
             }
-            .frame(height: 20)
             .padding(16)
         }
         .onTapGesture {

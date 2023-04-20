@@ -99,7 +99,7 @@ extension Task {
         progress: TaskProgress(
             title: "BUILD RATE",
             gaugeType: SketchingProgress.self,
-            sketchingTolerance: 2,
+            sketchingTolerance: 2.2,
             startingBackgroundRGB: SkyRGB.second,
             endingBackgroundRGB: SkyRGB.third
         )
@@ -116,7 +116,7 @@ extension Task {
         progress: TaskProgress(
             title: "PRODUCTION RATE",
             gaugeType: SketchingProgress.self,
-            sketchingTolerance: 2,
+            sketchingTolerance: 2.2,
             startingBackgroundRGB: SkyRGB.third,
             endingBackgroundRGB: SkyRGB.fourth
         )
