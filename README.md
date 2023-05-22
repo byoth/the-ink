@@ -1,4 +1,6 @@
-# TheInk
+# The Ink
+
+[📺 Demonstration](https://www.youtube.com/watch?v=FVY24U38o-w)
 
 This is an iPad app that needs to use Apple Pencil.
 Therefore, it is recommended to use an actual device, not a simulator.
